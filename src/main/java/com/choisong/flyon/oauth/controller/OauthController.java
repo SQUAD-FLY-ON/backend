@@ -1,0 +1,60 @@
+package com.choisong.flyon.oauth.controller;
+
+import com.choisong.flyon.jwt.controller.JwtCookieLoader;
+import com.choisong.flyon.jwt.dto.MemberTokens;
+import com.choisong.flyon.jwt.service.JwtService;
+import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.oauth.dto.OauthLoginResponse;
+import com.choisong.flyon.oauth.dto.OauthMemberResponse;
+import com.choisong.flyon.oauth.service.OauthService;
+import jakarta.servlet.http.HttpServletRequest;
+import jakarta.servlet.http.HttpServletResponse;
+import java.io.IOException;
+import java.net.URISyntaxException;
+import lombok.RequiredArgsConstructor;
+import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
+import org.springframework.web.bind.annotation.PostMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
+import org.springframework.web.bind.annotation.ResponseStatus;
+import org.springframework.web.bind.annotation.RestController;
+
+@RestController
+@RequiredArgsConstructor
+@RequestMapping("/api/oauth")
+public class OauthController {
+
+    private final OauthService oauthService;
+    private final JwtService jwtService;
+    private final JwtCookieLoader jwtCookieLoader;
+
+    private final LocalKakaoRedirectionLoginUrl localKakaoRedirectionLoginUrl;
+    private final KakaoRedirectionLoginUrl kakaoRedirectionLoginUrl;
+
+    @GetMapping("/{oauthProviderType}")
+    public void redirectOauthLoginUrl(
+        @PathVariable final OauthProviderType oauthProviderType,
+        final HttpServletRequest request,
+        final HttpServletResponse response)
+        throws IOException {
+        response.sendRedirect(redirectionUrl);
+    }
+
+    @PostMapping("/{oauthProviderType}")
+    @ResponseStatus(HttpStatus.CREATED)
+    public OauthLoginResponse login(
+        @PathVariable final OauthProviderType oauthProviderType,
+        @RequestParam final String authCode,
+        final HttpServletRequest request,
+        final HttpServletResponse response) throws URISyntaxException {
+        final OauthMemberResponse oauthMemberResponse =
+            oauthService.login(oauthProviderType, authCode, redirectionUrl);
+        final MemberTokens tokens =
+            jwtService.createAndSaveMemberTokens(oauthMemberResponse.memberId());
+        jwtCookieLoader.loadCookie(response, tokens.refreshToken());
+        return new OauthLoginResponse(oauthMemberResponse, tokens.accessToken());
+    }
+
+}

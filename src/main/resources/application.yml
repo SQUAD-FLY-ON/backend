@@ -1,0 +1,10 @@
+server:
+  port: 8080
+
+spring:
+  profiles:
+    active: local
+    group:
+      local: local,oauth2local,jwt
+      dev: dev,oauth2,jwt
+      prod: prod,oauth2,jwt
