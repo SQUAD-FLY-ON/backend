@@ -4,9 +4,9 @@ import com.choisong.flyon.global.exception.BusinessException;
 import com.choisong.flyon.global.exception.ErrorCode;
 import com.choisong.flyon.global.exception.ExternalApiException;
 import com.choisong.flyon.global.exception.ValidationException;
+import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.http.HttpStatus;
-import org.springframework.security.access.AccessDeniedException;
 import org.springframework.web.bind.annotation.ExceptionHandler;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestControllerAdvice;
@@ -15,31 +15,24 @@ import org.springframework.web.bind.annotation.RestControllerAdvice;
 @Slf4j
 public class GlobalExceptionHandler {
 
-    @ExceptionHandler(AccessDeniedException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleAccessDeniedException(AccessDeniedException e) {
-        loggingError(ErrorCode.AUTHORITY_NOT_VALID);
-        return new ErrorResponse(ErrorCode.AUTHORITY_NOT_VALID);
-    }
-
     @ExceptionHandler(BusinessException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleBusinessException(BusinessException e) {
+    public ErrorResponse handleBusinessException(BusinessException e, HttpServletResponse httpServletResponse) {
         loggingError(e.getErrorCode());
+        httpServletResponse.setStatus(e.getErrorCode().getHttpStatus().value());
         return new ErrorResponse(e.getErrorCode());
     }
 
     @ExceptionHandler(ValidationException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleValidationException(ValidationException e) {
+    public ErrorResponse handleValidationException(ValidationException e, HttpServletResponse httpServletResponse) {
         loggingError(e.getErrorCode());
+        httpServletResponse.setStatus(e.getErrorCode().getHttpStatus().value());
         return new ErrorResponse(e.getErrorCode());
     }
 
     @ExceptionHandler(ExternalApiException.class)
-    @ResponseStatus(HttpStatus.FORBIDDEN)
-    public ErrorResponse handleExternalApiException(ExternalApiException e) {
+    public ErrorResponse handleExternalApiException(ExternalApiException e, HttpServletResponse httpServletResponse) {
         loggingError(e.getErrorCode());
+        httpServletResponse.setStatus(e.getErrorCode().getHttpStatus().value());
         return new ErrorResponse(e.getErrorCode());
     }
 
