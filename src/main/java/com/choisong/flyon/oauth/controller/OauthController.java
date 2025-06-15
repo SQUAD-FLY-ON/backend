@@ -1,9 +1,9 @@
 package com.choisong.flyon.oauth.controller;
 
-import com.choisong.flyon.jwt.controller.JwtCookieLoader;
-import com.choisong.flyon.jwt.dto.MemberTokens;
-import com.choisong.flyon.jwt.service.JwtService;
-import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.security.jwt.controller.JwtCookieLoader;
+import com.choisong.flyon.security.jwt.dto.MemberTokens;
+import com.choisong.flyon.security.jwt.service.JwtService;
+import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.dto.OauthLoginResponse;
 import com.choisong.flyon.oauth.dto.OauthMemberResponse;
 import com.choisong.flyon.oauth.service.OauthService;

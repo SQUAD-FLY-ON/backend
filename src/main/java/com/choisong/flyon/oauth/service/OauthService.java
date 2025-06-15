@@ -1,7 +1,7 @@
 package com.choisong.flyon.oauth.service;
 
 import com.choisong.flyon.member.service.MemberService;
-import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.dto.OauthMemberResponse;
 import com.choisong.flyon.oauth.provider.OauthMember;
 import com.choisong.flyon.oauth.provider.OauthProviderSelector;

@@ -1,8 +1,8 @@
-package com.choisong.flyon.jwt.controller;
+package com.choisong.flyon.security.jwt.controller;
 
-import com.choisong.flyon.jwt.dto.AccessTokenResponse;
-import com.choisong.flyon.jwt.dto.MemberTokens;
-import com.choisong.flyon.jwt.service.JwtService;
+import com.choisong.flyon.security.jwt.dto.AccessTokenResponse;
+import com.choisong.flyon.security.jwt.dto.MemberTokens;
+import com.choisong.flyon.security.jwt.service.JwtService;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;

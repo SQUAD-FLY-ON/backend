@@ -1,4 +1,4 @@
-package com.choisong.flyon.jwt.service;
+package com.choisong.flyon.security.jwt.service;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 

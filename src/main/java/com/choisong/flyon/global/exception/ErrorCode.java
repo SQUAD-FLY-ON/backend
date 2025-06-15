@@ -16,6 +16,10 @@ public enum ErrorCode {
     CONVERTING_FAILED(HttpStatus.BAD_REQUEST,"002","요청한 소셜로그인 공급자를 변환할 수 없습니다."),
     REFRESHTOKEN_NOT_FOUND(HttpStatus.NOT_FOUND,"003","리프레쉬 토큰을 찾을 수 없습니다"),
     REFRESHTOKEN_COOKIE_NOT_FOUND(HttpStatus.NOT_FOUND,"004","리프레쉬 토큰을 쿠키에서 찾을 수 없습니다."),
+    ACCESSTOKEN_EXPIRED(HttpStatus.UNAUTHORIZED,"005","액세스토큰이 만료됐습니다."),
+    CAN_NOT_PARSE_TOKEN(HttpStatus.UNAUTHORIZED,"006","복호화할 수 없는 잘못된 토큰입니다."),
+    ROLE_NOT_FOUND(HttpStatus.NOT_FOUND,"007","이 에러 메세지를 본다면 서버 개발자에게 꼭 연락해주세요."),
+    ACCESSTOKEN_HEADER_NOT_FOUND(HttpStatus.UNAUTHORIZED,"008","요청 헤더에서 액세스토큰을 찾을 수 없습니다."),
 
     /**
      * Member Error 100~199

@@ -3,6 +3,7 @@ package com.choisong.flyon.global.advice;
 import com.choisong.flyon.global.exception.BusinessException;
 import com.choisong.flyon.global.exception.ErrorCode;
 import com.choisong.flyon.global.exception.ExternalApiException;
+import com.choisong.flyon.global.exception.SecurityException;
 import com.choisong.flyon.global.exception.ValidationException;
 import jakarta.servlet.http.HttpServletResponse;
 import lombok.extern.slf4j.Slf4j;
@@ -31,6 +32,13 @@ public class GlobalExceptionHandler {
 
     @ExceptionHandler(ExternalApiException.class)
     public ErrorResponse handleExternalApiException(ExternalApiException e, HttpServletResponse httpServletResponse) {
+        loggingError(e.getErrorCode());
+        httpServletResponse.setStatus(e.getErrorCode().getHttpStatus().value());
+        return new ErrorResponse(e.getErrorCode());
+    }
+
+    @ExceptionHandler(SecurityException.class)
+    public ErrorResponse handleExternalApiException(SecurityException e, HttpServletResponse httpServletResponse) {
         loggingError(e.getErrorCode());
         httpServletResponse.setStatus(e.getErrorCode().getHttpStatus().value());
         return new ErrorResponse(e.getErrorCode());

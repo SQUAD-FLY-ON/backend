@@ -1,8 +1,5 @@
 package com.choisong.flyon.oauth.provider;
 
-import static com.choisong.flyon.oauth.exception.OauthProviderNotFoundException.providerNotFound;
-
-import com.choisong.flyon.oauth.OauthProviderType;
 import com.choisong.flyon.oauth.exception.OauthProviderNotFoundException;
 import java.util.Map;
 import java.util.Optional;

@@ -1,4 +1,4 @@
-package com.choisong.flyon.jwt.service;
+package com.choisong.flyon.security.jwt.service;
 
 import io.jsonwebtoken.Jwts;
 import java.util.Date;

@@ -1,6 +1,6 @@
 package com.choisong.flyon.oauth.converter;
 
-import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.exception.OauthProviderNotFoundException;
 import java.util.Locale;
 import org.springframework.core.convert.converter.Converter;

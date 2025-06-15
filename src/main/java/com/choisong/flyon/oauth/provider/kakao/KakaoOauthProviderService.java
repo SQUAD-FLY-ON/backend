@@ -1,6 +1,6 @@
 package com.choisong.flyon.oauth.provider.kakao;
 
-import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.provider.OauthMember;
 import com.choisong.flyon.oauth.provider.OauthProviderService;
 import lombok.RequiredArgsConstructor;

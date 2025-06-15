@@ -1,9 +1,9 @@
-package com.choisong.flyon.jwt.service;
+package com.choisong.flyon.security.jwt.service;
 
-import com.choisong.flyon.jwt.domain.RefreshToken;
-import com.choisong.flyon.jwt.dto.MemberTokens;
-import com.choisong.flyon.jwt.exception.RefreshTokenNotFoundException;
-import com.choisong.flyon.jwt.repository.RefreshTokenRepository;
+import com.choisong.flyon.security.jwt.domain.RefreshToken;
+import com.choisong.flyon.security.jwt.dto.MemberTokens;
+import com.choisong.flyon.security.exception.TokenNotFoundException;
+import com.choisong.flyon.security.jwt.repository.RefreshTokenRepository;
 import jakarta.servlet.http.Cookie;
 import java.util.Optional;
 import lombok.RequiredArgsConstructor;
@@ -29,7 +29,7 @@ public class JwtService {
     private RefreshToken findByRefreshToken(final String token) {
         return refreshTokenRepository
             .findById(token)
-            .orElseThrow(RefreshTokenNotFoundException::tokenNotFound);
+            .orElseThrow(TokenNotFoundException::refreshTokenNotFound);
     }
 
     public MemberTokens createAndSaveMemberTokens(final String memberId) {
@@ -41,7 +41,7 @@ public class JwtService {
 
     public void logout(final Optional<Cookie> cookie) {
         final Cookie tokenCookie = cookie.orElseThrow(
-            RefreshTokenNotFoundException::tokenCookieNotFound);
+            TokenNotFoundException::refreshTokenCookieNotFound);
         final String refreshToken = tokenCookie.getValue();
         refreshTokenRepository.deleteById(refreshToken);
     }
