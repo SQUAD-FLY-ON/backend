@@ -1,19 +1,13 @@
 package com.choisong.flyon.jwt.service;
 
-import com.amorgakco.backend.global.exception.JwtAuthenticationException;
-import com.amorgakco.backend.global.oauth.MemberPrincipal;
-import com.amorgakco.backend.member.domain.Member;
-import com.amorgakco.backend.member.repository.MemberRepository;
+import com.choisong.flyon.member.domain.Member;
+import com.choisong.flyon.member.repository.MemberRepository;
 import io.jsonwebtoken.ExpiredJwtException;
 import io.jsonwebtoken.JwtException;
 import io.jsonwebtoken.Jwts;
-import java.util.List;
 import javax.crypto.SecretKey;
 import lombok.RequiredArgsConstructor;
-import org.springframework.security.authentication.UsernamePasswordAuthenticationToken;
-import org.springframework.security.core.Authentication;
-import org.springframework.security.core.GrantedAuthority;
-import org.springframework.security.core.authority.AuthorityUtils;
+import org.apache.tomcat.util.net.openssl.ciphers.Authentication;
 import org.springframework.stereotype.Component;
 
 @Component

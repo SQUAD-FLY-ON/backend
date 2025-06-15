@@ -21,38 +21,39 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
 
     @Override
     public boolean supports(
-            final MethodParameter returnType,
-            final Class<? extends HttpMessageConverter<?>> converterType) {
+        final MethodParameter returnType,
+        final Class<? extends HttpMessageConverter<?>> converterType) {
         return true;
     }
 
     @Override
     public Object beforeBodyWrite(
-            final Object body,
-            final MethodParameter returnType,
-            final MediaType selectedContentType,
-            final Class<? extends HttpMessageConverter<?>> selectedConverterType,
-            final ServerHttpRequest request,
-            final ServerHttpResponse response) {
+        final Object body,
+        final MethodParameter returnType,
+        final MediaType selectedContentType,
+        final Class<? extends HttpMessageConverter<?>> selectedConverterType,
+        final ServerHttpRequest request,
+        final ServerHttpResponse response) {
         if (body instanceof ErrorResponse) {
             return body;
         }
         HttpServletResponse servletResponse =
-                ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
-                        .getResponse();
+            ((ServletRequestAttributes) RequestContextHolder.getRequestAttributes())
+                .getResponse();
         int status = servletResponse.getStatus();
         String reasonPhrase = HttpStatus.resolve(status).getReasonPhrase();
         return SuccessResponse.builder()
-                .data(body)
-                .httpStatusCode(status)
-                .httpStatusMessage(reasonPhrase)
-                .build();
+            .data(body)
+            .httpStatusCode(status)
+            .httpStatusMessage(reasonPhrase)
+            .build();
     }
 
     @Getter
     @AllArgsConstructor
     @Builder
     public static class SuccessResponse<T> {
+
         private int httpStatusCode;
         private String httpStatusMessage;
         private T data;

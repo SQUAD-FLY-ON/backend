@@ -2,6 +2,8 @@ package com.choisong.flyon.oauth.service;
 
 import com.choisong.flyon.member.service.MemberService;
 import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.oauth.dto.OauthMemberResponse;
+import com.choisong.flyon.oauth.provider.OauthMember;
 import com.choisong.flyon.oauth.provider.OauthProviderSelector;
 import com.choisong.flyon.oauth.provider.OauthProviderService;
 import lombok.RequiredArgsConstructor;
@@ -21,11 +23,10 @@ public class OauthService {
     }
 
     public OauthMemberResponse login(
-        final OauthProviderType oauth2ProviderType, final String authCode,
-        final String redirectUrl) {
+        final OauthProviderType oauth2ProviderType, final String authCode) {
         final OauthProviderService providerService =
             oauthProviderSelector.getProvider(oauth2ProviderType);
-        final OauthMember oauth2Member = providerService.getOauthMember(authCode, redirectUrl);
+        final OauthMember oauth2Member = providerService.getOauthMember(authCode);
         final Long memberId = memberService.updateOrSave(oauth2Member);
         return new OauthMemberResponse(
             memberId.toString(), oauth2Member.nickname(), oauth2Member.imgUrl());

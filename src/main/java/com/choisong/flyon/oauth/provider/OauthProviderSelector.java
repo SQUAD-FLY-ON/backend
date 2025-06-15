@@ -1,6 +1,9 @@
 package com.choisong.flyon.oauth.provider;
 
+import static com.choisong.flyon.oauth.exception.OauthProviderNotFoundException.providerNotFound;
+
 import com.choisong.flyon.oauth.OauthProviderType;
+import com.choisong.flyon.oauth.exception.OauthProviderNotFoundException;
 import java.util.Map;
 import java.util.Optional;
 import java.util.Set;
@@ -24,6 +27,6 @@ public class OauthProviderSelector {
 
     public OauthProviderService getProvider(final OauthProviderType oauth2ProviderType) {
         return Optional.ofNullable(providerServices.get(oauth2ProviderType))
-            .orElseThrow(InvalidOauthProviderException::invalidOauth2Provider);
+            .orElseThrow(OauthProviderNotFoundException::providerNotFound);
     }
 }

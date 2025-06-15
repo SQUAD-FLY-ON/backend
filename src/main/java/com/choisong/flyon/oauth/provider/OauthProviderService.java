@@ -8,5 +8,5 @@ public interface OauthProviderService {
 
     String getRedirectionLoginUrl();
 
-    OauthMember getOauthMember(String authCode, String redirectUrl);
+    OauthMember getOauthMember(String authCode);
 }

@@ -10,10 +10,10 @@ public record KakaoMemberResponse(Long id, KakaoAccount kakaoAccount) {
 
     public OauthMember toOauthMember() {
         return OauthMember.builder()
-            .oauth2Id(this.id().toString())
+            .oauthId(this.id().toString())
             .nickname(this.kakaoAccount().profile().nickname())
             .imgUrl(this.kakaoAccount().profile().profileImageUrl())
-            .oauth2ProviderType(OauthProviderType.KAKAO)
+            .oauthProviderType(OauthProviderType.KAKAO)
             .build();
     }
 

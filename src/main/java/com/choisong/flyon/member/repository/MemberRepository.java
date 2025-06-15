@@ -1,7 +1,7 @@
 package com.choisong.flyon.member.repository;
 
-import com.amorgakco.backend.member.domain.Member;
-import com.amorgakco.backend.member.domain.Oauth2ProviderType;
+import com.choisong.flyon.member.domain.Member;
+import com.choisong.flyon.oauth.OauthProviderType;
 import jakarta.persistence.LockModeType;
 import java.util.Optional;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -13,13 +13,11 @@ import org.springframework.stereotype.Repository;
 public interface MemberRepository extends JpaRepository<Member, Long> {
 
     @Query(
-        "select m from Member m join fetch m.roleNames where m.oauth2ProviderType =:provider and "
+        "select m from Member m where m.oauthProviderType =:provider and "
             + "m.oauth2Id =:id")
     @Lock(LockModeType.PESSIMISTIC_READ)
-    Optional<Member> findByOauth2ProviderAndOauth2Id(Oauth2ProviderType provider, String id);
+    Optional<Member> findByOauth2ProviderAndOauth2Id(OauthProviderType provider, String id);
 
-    @Query("select m from Member m join fetch m.roleNames where m.id =:memberId")
+    @Query("select m from Member m where m.id =:memberId")
     Optional<Member> findByIdWithRoles(Long memberId);
-
-    Optional<Member> findByNickname(String nickname);
 }
