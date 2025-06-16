@@ -1,8 +1,9 @@
 package com.choisong.flyon.oauth.controller;
 
-import com.choisong.flyon.security.jwt.controller.JwtCookieLoader;
-import com.choisong.flyon.security.jwt.dto.MemberTokens;
-import com.choisong.flyon.security.jwt.service.JwtService;
+import com.choisong.flyon.security.annotation.NoAuthRequired;
+import com.choisong.flyon.jwt.controller.JwtCookieLoader;
+import com.choisong.flyon.jwt.dto.MemberTokens;
+import com.choisong.flyon.jwt.service.JwtService;
 import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.dto.OauthLoginResponse;
 import com.choisong.flyon.oauth.dto.OauthMemberResponse;
@@ -29,6 +30,7 @@ public class OauthController {
     private final JwtCookieLoader jwtCookieLoader;
 
     @GetMapping("/{oauthProviderType}")
+    @NoAuthRequired
     public void redirectOauthLoginUrl(
         @PathVariable final OauthProviderType oauthProviderType,
         final HttpServletResponse response)
@@ -38,6 +40,7 @@ public class OauthController {
     }
 
     @PostMapping("/{oauthProviderType}")
+    @NoAuthRequired
     @ResponseStatus(HttpStatus.CREATED)
     public OauthLoginResponse socialLogin(
         @PathVariable final OauthProviderType oauthProviderType,

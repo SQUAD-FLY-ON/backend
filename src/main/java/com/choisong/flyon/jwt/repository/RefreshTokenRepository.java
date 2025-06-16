@@ -1,6 +1,6 @@
-package com.choisong.flyon.security.jwt.repository;
+package com.choisong.flyon.jwt.repository;
 
-import com.choisong.flyon.security.jwt.domain.RefreshToken;
+import com.choisong.flyon.jwt.domain.RefreshToken;
 import org.springframework.data.repository.CrudRepository;
 import org.springframework.stereotype.Repository;
 

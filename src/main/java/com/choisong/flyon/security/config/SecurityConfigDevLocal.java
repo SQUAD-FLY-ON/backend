@@ -1,11 +1,15 @@
 package com.choisong.flyon.security.config;
 
+import com.choisong.flyon.security.filter.JwtAuthenticationEntryPoint;
 import com.choisong.flyon.security.filter.JwtAuthenticationFilter;
 import com.choisong.flyon.security.filter.JwtExceptionHandlingFilter;
+import com.choisong.flyon.security.scanner.NoAuthRequiredAnnotationScanner;
+import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Profile;
 import org.springframework.security.config.Customizer;
 import org.springframework.security.config.annotation.web.builders.HttpSecurity;
 import org.springframework.security.config.annotation.web.configurers.AbstractHttpConfigurer;
@@ -18,11 +22,14 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @Configuration
-public class SecurityConfig {
+@Profile({"dev","local"})
+public class SecurityConfigDevLocal {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
     private final JwtExceptionHandlingFilter jwtExceptionHandlingFilter;
+    private final JwtAuthenticationEntryPoint jwtAuthenticationEntryPoint;
+    private final NoAuthRequiredAnnotationScanner scanner;
 
     @Bean
     public SecurityFilterChain securityFilterChain(final HttpSecurity http) throws Exception {
@@ -30,11 +37,20 @@ public class SecurityConfig {
             .cors(Customizer.withDefaults())
             .httpBasic(AbstractHttpConfigurer::disable)
             .formLogin(AbstractHttpConfigurer::disable)
+            .authorizeHttpRequests(
+                request ->
+                    request.requestMatchers(scanner.getPublicUrls().toArray(new String[0]))
+                        .permitAll()
+                        .anyRequest()
+                        .authenticated())
             .logout(AbstractHttpConfigurer::disable)
             .sessionManagement(c -> c.sessionCreationPolicy(SessionCreationPolicy.STATELESS))
             .addFilterBefore(
                 jwtAuthenticationFilter, UsernamePasswordAuthenticationFilter.class)
             .addFilterBefore(jwtExceptionHandlingFilter, JwtAuthenticationFilter.class)
+            .exceptionHandling(
+                e ->
+                    e.authenticationEntryPoint(jwtAuthenticationEntryPoint))
             .build();
     }
 

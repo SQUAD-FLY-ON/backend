@@ -1,4 +1,4 @@
-package com.choisong.flyon.security.jwt.config;
+package com.choisong.flyon.jwt.config;
 
 import io.jsonwebtoken.security.Keys;
 import java.nio.charset.StandardCharsets;

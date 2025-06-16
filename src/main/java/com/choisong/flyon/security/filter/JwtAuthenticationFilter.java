@@ -1,7 +1,7 @@
 package com.choisong.flyon.security.filter;
 
-import com.choisong.flyon.security.jwt.service.JwtExtractor;
-import com.choisong.flyon.security.jwt.service.JwtValidator;
+import com.choisong.flyon.jwt.service.JwtExtractor;
+import com.choisong.flyon.jwt.service.JwtValidator;
 import jakarta.servlet.FilterChain;
 import jakarta.servlet.ServletException;
 import jakarta.servlet.http.HttpServletRequest;
@@ -28,10 +28,14 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final FilterChain filterChain)
         throws ServletException, IOException {
         final String accessTokenWithBearer = request.getHeader(AUTHORIZATION_HEADER);
-        String token = jwtExtractor
-            .extractAccessToken(accessTokenWithBearer);
-        final Authentication authentication = jwtValidator.getAuthentication(token);
-        SecurityContextHolder.getContext().setAuthentication(authentication);
+        jwtExtractor
+            .extractAccessToken(accessTokenWithBearer)
+            .ifPresent(
+                token -> {
+                    final Authentication authentication =
+                        jwtValidator.getAuthentication(token);
+                    SecurityContextHolder.getContext().setAuthentication(authentication);
+                });
         filterChain.doFilter(request, response);
     }
 }

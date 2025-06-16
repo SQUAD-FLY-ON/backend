@@ -1,4 +1,4 @@
-package com.choisong.flyon.security.jwt.service;
+package com.choisong.flyon.jwt.service;
 
 import com.choisong.flyon.member.domain.Roles;
 import com.choisong.flyon.member.repository.RoleRepository;

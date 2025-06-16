@@ -1,4 +1,4 @@
-package com.choisong.flyon.security.jwt.domain;
+package com.choisong.flyon.jwt.domain;
 
 import lombok.AllArgsConstructor;
 import lombok.Getter;

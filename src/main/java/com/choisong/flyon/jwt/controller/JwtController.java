@@ -1,8 +1,9 @@
-package com.choisong.flyon.security.jwt.controller;
+package com.choisong.flyon.jwt.controller;
 
-import com.choisong.flyon.security.jwt.dto.AccessTokenResponse;
-import com.choisong.flyon.security.jwt.dto.MemberTokens;
-import com.choisong.flyon.security.jwt.service.JwtService;
+import com.choisong.flyon.jwt.service.JwtService;
+import com.choisong.flyon.jwt.dto.AccessTokenResponse;
+import com.choisong.flyon.jwt.dto.MemberTokens;
+import com.choisong.flyon.security.annotation.NoAuthRequired;
 import jakarta.servlet.http.Cookie;
 import jakarta.servlet.http.HttpServletResponse;
 import java.util.Optional;
@@ -25,6 +26,7 @@ public class JwtController {
 
     @PostMapping
     @ResponseStatus(HttpStatus.CREATED)
+    @NoAuthRequired
     public AccessTokenResponse reissueAccessToken(@CookieValue(value = "refresh-token") final String refreshToken,
         final HttpServletResponse response) {
         final MemberTokens memberTokens = jwtService.reissue(refreshToken);
