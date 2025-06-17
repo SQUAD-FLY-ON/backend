@@ -77,4 +77,9 @@ public class MemberService {
         return memberRepository.findByLoginId(loginId)
             .orElseThrow(MemberNotFoundException::notFound);
     }
+
+    public Member getMemberById(final Long memberId){
+        return memberRepository.findById(memberId)
+            .orElseThrow(MemberNotFoundException::notFound);
+    }
 }
