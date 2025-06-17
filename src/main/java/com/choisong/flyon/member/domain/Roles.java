@@ -24,4 +24,9 @@ public class Roles {
 
     @Enumerated(EnumType.STRING)
     private MemberRole memberRole;
+
+    public Roles(final Long memberId, final MemberRole memberRole) {
+        this.memberId = memberId;
+        this.memberRole = memberRole;
+    }
 }

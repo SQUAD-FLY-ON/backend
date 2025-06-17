@@ -42,12 +42,12 @@ public class OauthController {
     @PostMapping("/{oauthProviderType}")
     @NoAuthRequired
     @ResponseStatus(HttpStatus.CREATED)
-    public OauthLoginResponse socialLogin(
+    public OauthLoginResponse oauthLogin(
         @PathVariable final OauthProviderType oauthProviderType,
         @RequestParam final String authCode,
         final HttpServletResponse response) {
         final OauthMemberResponse oauthMemberResponse =
-            oauthService.login(oauthProviderType, authCode);
+            oauthService.oauthLogin(oauthProviderType, authCode);
         final MemberTokens tokens =
             jwtService.createAndSaveMemberTokens(oauthMemberResponse.memberId());
         jwtCookieLoader.loadCookie(response, tokens.refreshToken());

@@ -22,12 +22,12 @@ public class OauthService {
         return providerService.getRedirectionLoginUrl();
     }
 
-    public OauthMemberResponse login(
+    public OauthMemberResponse oauthLogin(
         final OauthProviderType oauth2ProviderType, final String authCode) {
         final OauthProviderService providerService =
             oauthProviderSelector.getProvider(oauth2ProviderType);
         final OauthMember oauth2Member = providerService.getOauthMember(authCode);
-        final Long memberId = memberService.updateOrSave(oauth2Member);
+        final Long memberId = memberService.updateOrSaveOauthMember(oauth2Member);
         return new OauthMemberResponse(
             memberId.toString(), oauth2Member.nickname(), oauth2Member.imgUrl());
     }

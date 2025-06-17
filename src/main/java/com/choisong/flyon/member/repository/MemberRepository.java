@@ -18,6 +18,9 @@ public interface MemberRepository extends JpaRepository<Member, Long> {
     @Lock(LockModeType.PESSIMISTIC_READ)
     Optional<Member> findByOauth2ProviderAndOauth2Id(OauthProviderType provider, String id);
 
-    @Query("select m from Member m where m.id =:memberId")
-    Optional<Member> findByIdWithRoles(Long memberId);
+    boolean existsByLoginId(String loginId);
+
+    boolean existsByNickname(String nickname);
+
+    Optional<Member> findByLoginId(String loginId);
 }

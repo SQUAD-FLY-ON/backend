@@ -20,11 +20,14 @@ public enum ErrorCode {
     CAN_NOT_PARSE_TOKEN(HttpStatus.UNAUTHORIZED,"006","복호화할 수 없는 잘못된 토큰입니다."),
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND,"007","이 에러 메세지를 본다면 서버 개발자에게 꼭 연락해주세요."),
     ACCESSTOKEN_HEADER_NOT_FOUND(HttpStatus.UNAUTHORIZED,"008","요청 헤더에서 액세스토큰을 찾을 수 없습니다."),
+    PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST,"009","비밀번호가 일치하지 않습니다."),
 
     /**
      * Member Error 100~199
      */
-    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"100","회원 정보를 찾을 수 없습니다.");
+    MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"100","회원 정보를 찾을 수 없습니다."),
+    LOGIN_ID_DUPLICATED(HttpStatus.BAD_REQUEST,"101","중복된 로그인 아이디입니다."),
+    NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST,"102","중복된 닉네임입니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
