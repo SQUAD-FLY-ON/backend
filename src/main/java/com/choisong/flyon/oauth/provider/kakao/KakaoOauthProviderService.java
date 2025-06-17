@@ -11,13 +11,13 @@ import org.springframework.util.MultiValueMap;
 
 @Service
 @RequiredArgsConstructor
-@Slf4j
 public class KakaoOauthProviderService implements OauthProviderService {
 
     private static final String GRANT_TYPE = "grant_type";
     private static final String AUTHORIZATION_CODE = "authorization_code";
     private static final String CODE = "code";
     private static final String CLIENT_ID = "client_id";
+    private static final String CLIENT_SECRET = "client_secret";
     private static final String REDIRECT_URI = "redirect_uri";
     private static final String BEARER = "Bearer ";
 
@@ -38,9 +38,8 @@ public class KakaoOauthProviderService implements OauthProviderService {
     @Override
     public OauthMember getOauthMember(final String authCode) {
         final KakaoAuthorization kakaoAuthorization =
-            kakaoRestClient.getKakaoAccessToken(requestParams(authCode, kakaoRedirectionLoginUrl.redirectionUrl()));
+            kakaoRestClient.getKakaoAccessToken(requestParams(authCode, kakaoOauthProperties.redirectUri()));
         final String accessToken = kakaoAuthorization.accessToken();
-        log.info("access {}", accessToken);
         final KakaoMemberResponse kakaoMember =
             kakaoRestClient.getKakaoMember(BEARER + accessToken);
         return kakaoMember.toOauthMember();
@@ -53,7 +52,7 @@ public class KakaoOauthProviderService implements OauthProviderService {
         params.add(CLIENT_ID, kakaoOauthProperties.clientId());
         params.add(REDIRECT_URI, redirectUrl);
         params.add(CODE, authCode);
-        params.add(CLIENT_ID, kakaoOauthProperties.clientSecret());
+        params.add(CLIENT_SECRET, kakaoOauthProperties.clientSecret());
         return params;
     }
 }

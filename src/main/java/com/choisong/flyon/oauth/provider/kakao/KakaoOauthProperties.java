@@ -2,7 +2,7 @@ package com.choisong.flyon.oauth.provider.kakao;
 
 import org.springframework.boot.context.properties.ConfigurationProperties;
 
-@ConfigurationProperties(prefix = "oauth2.kakao")
+@ConfigurationProperties(prefix = "oauth.kakao")
 public record KakaoOauthProperties(
     String loginUri,
     String redirectUri,
