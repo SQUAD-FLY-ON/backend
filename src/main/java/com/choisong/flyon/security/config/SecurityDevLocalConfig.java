@@ -4,7 +4,6 @@ import com.choisong.flyon.security.filter.JwtAuthenticationEntryPoint;
 import com.choisong.flyon.security.filter.JwtAuthenticationFilter;
 import com.choisong.flyon.security.filter.JwtExceptionHandlingFilter;
 import com.choisong.flyon.security.scanner.NoAuthRequiredAnnotationScanner;
-import jakarta.annotation.security.PermitAll;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.context.annotation.Bean;
@@ -25,7 +24,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 @RequiredArgsConstructor
 @Configuration
 @Profile({"dev","local"})
-public class SecurityConfigDevLocal {
+public class SecurityDevLocalConfig {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
     private final JwtAuthenticationFilter jwtAuthenticationFilter;
