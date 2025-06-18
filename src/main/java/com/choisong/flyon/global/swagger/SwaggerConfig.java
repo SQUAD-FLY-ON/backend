@@ -3,6 +3,7 @@ package com.choisong.flyon.global.swagger;
 import com.choisong.flyon.global.advice.GlobalExceptionHandler.ErrorResponse;
 import com.choisong.flyon.global.advice.GlobalResponseBodyAdvice.SuccessResponse;
 import com.choisong.flyon.global.exception.ErrorCode;
+import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.Components;
@@ -46,22 +47,23 @@ public class SwaggerConfig {
         SecurityRequirement securityRequirement = getSecurityRequireMent();
 
         return new OpenAPI()
-                .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
-                .security(List.of(securityRequirement));
+            .components(new Components().addSecuritySchemes("bearerAuth", securityScheme))
+            .security(List.of(securityRequirement));
     }
 
     private SecurityScheme getSecurityScheme() {
         return new SecurityScheme()
-                .type(SecurityScheme.Type.HTTP)
-                .scheme("bearer")
-                .bearerFormat("JWT")
-                .in(SecurityScheme.In.HEADER)
-                .name("Authorization");
+            .type(SecurityScheme.Type.HTTP)
+            .scheme("bearer")
+            .bearerFormat("JWT")
+            .in(SecurityScheme.In.HEADER)
+            .name("Authorization");
     }
 
     private SecurityRequirement getSecurityRequireMent() {
         return new SecurityRequirement().addList("bearerAuth");
     }
+
 
     @Bean
     public OperationCustomizer operationCustomizer() {
@@ -74,13 +76,13 @@ public class SwaggerConfig {
 
     private void errorCodeHandle(Operation operation, HandlerMethod handlerMethod) {
         ApiErrorCodeExamples apiErrorCodeExamples =
-                handlerMethod.getMethodAnnotation(ApiErrorCodeExamples.class);
+            handlerMethod.getMethodAnnotation(ApiErrorCodeExamples.class);
 
         if (apiErrorCodeExamples != null) {
             generateErrorCodeResponseExample(operation, apiErrorCodeExamples.value());
         } else {
             ApiErrorCodeExample apiErrorCodeExample =
-                    handlerMethod.getMethodAnnotation(ApiErrorCodeExample.class);
+                handlerMethod.getMethodAnnotation(ApiErrorCodeExample.class);
             if (apiErrorCodeExample != null) {
                 generateErrorCodeResponseExample(operation, apiErrorCodeExample.value());
             }
@@ -92,15 +94,15 @@ public class SwaggerConfig {
 
         // ExampleHolder(에러 응답값) 객체를 만들고 에러 코드별로 그룹화
         Map<Integer, List<ExampleHolder>> statusWithExampleHolders =
-                Arrays.stream(errorCodes)
-                        .map(
-                                errorCode ->
-                                        ExampleHolder.builder()
-                                                .holder(getSwaggerExample(errorCode))
-                                                .code(errorCode.getHttpStatus().value())
-                                                .name(errorCode.name())
-                                                .build())
-                        .collect(Collectors.groupingBy(ExampleHolder::code));
+            Arrays.stream(errorCodes)
+                .map(
+                    errorCode ->
+                        ExampleHolder.builder()
+                            .holder(getSwaggerExample(errorCode))
+                            .code(errorCode.getHttpStatus().value())
+                            .name(errorCode.name())
+                            .build())
+                .collect(Collectors.groupingBy(ExampleHolder::code));
 
         // ExampleHolders를 ApiResponses에 추가
         addExamplesToResponses(responses, statusWithExampleHolders);
@@ -112,11 +114,11 @@ public class SwaggerConfig {
 
         // ExampleHolder 객체 생성 및 ApiResponses에 추가
         ExampleHolder exampleHolder =
-                ExampleHolder.builder()
-                        .holder(getSwaggerExample(errorCode))
-                        .code(errorCode.getHttpStatus().value())
-                        .name(errorCode.name())
-                        .build();
+            ExampleHolder.builder()
+                .holder(getSwaggerExample(errorCode))
+                .code(errorCode.getHttpStatus().value())
+                .name(errorCode.name())
+                .build();
         addExamplesToResponses(responses, exampleHolder);
     }
 
@@ -127,23 +129,22 @@ public class SwaggerConfig {
         return example;
     }
 
-    // exampleHolder를 ApiResponses에 추가
     private void addExamplesToResponses(
-            ApiResponses responses, Map<Integer, List<ExampleHolder>> statusWithExampleHolders) {
+        ApiResponses responses, Map<Integer, List<ExampleHolder>> statusWithExampleHolders) {
         statusWithExampleHolders.forEach(
-                (status, v) -> {
-                    Content content = new Content();
-                    MediaType mediaType = new MediaType();
-                    ApiResponse apiResponse = new ApiResponse();
+            (status, v) -> {
+                Content content = new Content();
+                MediaType mediaType = new MediaType();
+                ApiResponse apiResponse = new ApiResponse();
 
-                    v.forEach(
-                            exampleHolder ->
-                                    mediaType.addExamples(
-                                            exampleHolder.name(), exampleHolder.holder()));
-                    content.addMediaType("application/json", mediaType);
-                    apiResponse.setContent(content);
-                    responses.addApiResponse(String.valueOf(status), apiResponse);
-                });
+                v.forEach(
+                    exampleHolder ->
+                        mediaType.addExamples(
+                            exampleHolder.name(), exampleHolder.holder()));
+                content.addMediaType("application/json", mediaType);
+                apiResponse.setContent(content);
+                responses.addApiResponse(String.valueOf(status), apiResponse);
+            });
     }
 
     private void addExamplesToResponses(ApiResponses responses, ExampleHolder exampleHolder) {
@@ -170,29 +171,29 @@ public class SwaggerConfig {
     private void wrap(final Content content, Class<?> type, String wrapFieldName, String code) {
         if (Objects.nonNull(content)) {
             content.forEach(
-                    (mediaTypeKey, mediaType) -> {
-                        Schema<?> originalSchema = mediaType.getSchema();
-                        Schema<?> wrappedSchema =
-                                wrapSchema(originalSchema, type, wrapFieldName, code);
-                        mediaType.setSchema(wrappedSchema);
-                    });
+                (mediaTypeKey, mediaType) -> {
+                    Schema<?> originalSchema = mediaType.getSchema();
+                    Schema<?> wrappedSchema =
+                        wrapSchema(originalSchema, type, wrapFieldName, code);
+                    mediaType.setSchema(wrappedSchema);
+                });
         }
     }
 
     @SneakyThrows
     private <T> Schema<T> wrapSchema(
-            Schema<?> originalSchema, Class<T> type, String wrapFieldName, String code) {
+        Schema<?> originalSchema, Class<T> type, String wrapFieldName, String code) {
         final Schema<T> wrapperSchema = new Schema<>();
         for (Field field : type.getDeclaredFields()) {
             field.setAccessible(true);
             if (field.getName().equals("httpStatusCode")) {
                 wrapperSchema.addProperty(
-                        field.getName(), new Schema<>().type("integer").example(code));
+                    field.getName(), new Schema<>().type("integer").example(code));
             }
             if (field.getName().equals("httpStatusMessage")) {
                 String reasonPhrase = HttpStatus.resolve(Integer.parseInt(code)).getReasonPhrase();
                 wrapperSchema.addProperty(
-                        field.getName(), new Schema<>().type("string").example(reasonPhrase));
+                    field.getName(), new Schema<>().type("string").example(reasonPhrase));
             }
             field.setAccessible(false);
         }

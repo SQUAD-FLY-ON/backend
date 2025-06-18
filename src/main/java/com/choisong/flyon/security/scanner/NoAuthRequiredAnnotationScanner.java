@@ -22,5 +22,6 @@ public class NoAuthRequiredAnnotationScanner {
                 publicUrls.addAll(patterns);
             }
         }
+        publicUrls.addAll(List.of("/api/v3/api-docs/**","/api/swagger-ui/**"));
     }
 }

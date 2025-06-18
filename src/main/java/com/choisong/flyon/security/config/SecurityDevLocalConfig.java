@@ -40,7 +40,8 @@ public class SecurityDevLocalConfig {
             .formLogin(AbstractHttpConfigurer::disable)
             .authorizeHttpRequests(
                 request ->
-                    request.requestMatchers(scanner.getPublicUrls().toArray(new String[0]))
+//                    request.requestMatchers(scanner.getPublicUrls().toArray(new String[0]))
+                    request.requestMatchers("/api/v3/api-docs/**","/api/swagger-ui/**","/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())
@@ -65,7 +66,7 @@ public class SecurityDevLocalConfig {
         configuration.setAllowCredentials(true);
         configuration.addExposedHeader(AUTHORIZATION_HEADER);
         UrlBasedCorsConfigurationSource source = new UrlBasedCorsConfigurationSource();
-        source.registerCorsConfiguration("/**", configuration);
+        source.registerCorsConfiguration("/api/**", configuration);
         return source;
     }
 
