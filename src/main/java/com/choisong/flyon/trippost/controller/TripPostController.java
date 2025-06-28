@@ -6,6 +6,7 @@ import com.choisong.flyon.trippost.dto.TripPostResponse;
 import com.choisong.flyon.trippost.service.TripPostService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.core.Authentication;
+import org.springframework.security.core.annotation.AuthenticationPrincipal;
 import org.springframework.security.core.context.SecurityContextHolder;
 import org.springframework.web.bind.annotation.*;
 
@@ -17,9 +18,8 @@ public class TripPostController {
     private final TripPostService service;
 
     @PostMapping
-    public TripPostResponse create(@RequestBody TripPostRequest request) {
-        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
-        MemberPrincipal principal = (MemberPrincipal) authentication.getPrincipal();
+    public TripPostResponse create(@RequestBody TripPostRequest request,
+                                   @AuthenticationPrincipal MemberPrincipal principal) {
         Long memberId = Long.parseLong(principal.getName());
         return service.create(request, memberId);
     }

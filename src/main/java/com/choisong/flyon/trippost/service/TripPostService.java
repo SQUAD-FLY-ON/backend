@@ -1,5 +1,8 @@
 package com.choisong.flyon.trippost.service;
 
+import com.choisong.flyon.member.domain.Member;
+import com.choisong.flyon.member.exception.MemberNotFoundException;
+import com.choisong.flyon.member.repository.MemberRepository;
 import com.choisong.flyon.trippost.dto.TripPostRequest;
 import com.choisong.flyon.trippost.dto.TripPostResponse;
 import com.choisong.flyon.trippost.entity.TripPost;
@@ -15,10 +18,14 @@ public class TripPostService {
 
     private final TripPostRepository repository;
     private final TripPostMapper mapper;
+    private final MemberRepository memberRepository;
 
     public TripPostResponse create(TripPostRequest request, Long memberId) {
-        TripPost entity = mapper.toEntity(request, memberId);
-        TripPost saved = repository.save(entity);
+        Member member = memberRepository.findById(memberId)
+                .orElseThrow(MemberNotFoundException::notFound);
+
+        TripPost post = mapper.toEntity(request, member);
+        TripPost saved = repository.save(post);
         return mapper.toResponse(saved);
     }
 

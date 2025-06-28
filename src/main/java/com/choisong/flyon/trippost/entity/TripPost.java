@@ -1,9 +1,7 @@
 package com.choisong.flyon.trippost.entity;
 
-import jakarta.persistence.Entity;
-import jakarta.persistence.GeneratedValue;
-import jakarta.persistence.GenerationType;
-import jakarta.persistence.Id;
+import com.choisong.flyon.member.domain.Member;
+import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
@@ -19,13 +17,17 @@ public class TripPost {
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     private Long id;
 
-    private Long memberId;
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
 
     private String title;
 
-    private String description;
+    private String content;
 
     private LocalDate startDate;
 
     private LocalDate endDate;
+
+    // 추후에 TripCourse 매핑
 }
