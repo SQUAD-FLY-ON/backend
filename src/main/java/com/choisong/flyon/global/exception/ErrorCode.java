@@ -32,7 +32,8 @@ public enum ErrorCode {
     /**
      * TripPost Error 200~299
      */
-    TRIP_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "200", "여행 일정을 찾을 수 없습니다.");
+    TRIP_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "200", "여행 게시글을 찾을 수 없습니다."),
+    TRIP_POST_ACCESS_DENIED(HttpStatus.FORBIDDEN, "201", "본인의 글만 수정/삭제할 수 있습니다.");
 
 
     private final HttpStatus httpStatus;

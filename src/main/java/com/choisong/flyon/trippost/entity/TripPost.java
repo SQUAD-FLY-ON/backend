@@ -30,4 +30,11 @@ public class TripPost {
     private LocalDate endDate;
 
     // 추후에 TripCourse 매핑
+
+    public void update(String title, String content, LocalDate startDate, LocalDate endDate) {
+        this.title = title;
+        this.content = content;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
 }
