@@ -27,7 +27,14 @@ public enum ErrorCode {
      */
     MEMBER_NOT_FOUND(HttpStatus.NOT_FOUND,"100","회원 정보를 찾을 수 없습니다."),
     LOGIN_ID_DUPLICATED(HttpStatus.BAD_REQUEST,"101","중복된 로그인 아이디입니다."),
-    NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST,"102","중복된 닉네임입니다.");
+    NICKNAME_DUPLICATED(HttpStatus.BAD_REQUEST,"102","중복된 닉네임입니다."),
+
+    /**
+     * TripPost Error 200~299
+     */
+    TRIP_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "200", "여행 게시글을 찾을 수 없습니다."),
+    TRIP_POST_ACCESS_DENIED(HttpStatus.FORBIDDEN, "201", "본인의 글만 수정/삭제할 수 있습니다.");
+
 
     private final HttpStatus httpStatus;
     private final String code;

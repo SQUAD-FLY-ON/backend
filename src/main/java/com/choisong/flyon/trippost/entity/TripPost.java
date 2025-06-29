@@ -1,0 +1,40 @@
+package com.choisong.flyon.trippost.entity;
+
+import com.choisong.flyon.member.domain.Member;
+import jakarta.persistence.*;
+import lombok.*;
+
+import java.time.LocalDate;
+
+@Entity
+@Getter
+@NoArgsConstructor(access = AccessLevel.PROTECTED)
+@AllArgsConstructor
+@Builder
+public class TripPost {
+
+    @Id
+    @GeneratedValue(strategy = GenerationType.IDENTITY)
+    private Long id;
+
+    @ManyToOne(fetch = FetchType.LAZY)
+    @JoinColumn(name = "member_id", nullable = false)
+    private Member member;
+
+    private String title;
+
+    private String content;
+
+    private LocalDate startDate;
+
+    private LocalDate endDate;
+
+    // 추후에 TripCourse 매핑
+
+    public void update(String title, String content, LocalDate startDate, LocalDate endDate) {
+        this.title = title;
+        this.content = content;
+        this.startDate = startDate;
+        this.endDate = endDate;
+    }
+}
