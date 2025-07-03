@@ -1,10 +1,12 @@
 package com.choisong.flyon.trippost.entity;
 
 import com.choisong.flyon.member.domain.Member;
+import com.choisong.flyon.trippost.exception.TripPostAccessDeniedException;
 import jakarta.persistence.*;
 import lombok.*;
 
 import java.time.LocalDate;
+import java.time.LocalDateTime;
 
 @Entity
 @Getter
@@ -25,16 +27,33 @@ public class TripPost {
 
     private String content;
 
-    private LocalDate startDate;
+    @Column(nullable = false, updatable = false)
+    private LocalDateTime createdAt;
 
-    private LocalDate endDate;
+    @Column(nullable = false)
+    private LocalDateTime updatedAt;
+
+    @PrePersist
+    protected void onCreate() {
+        this.createdAt = LocalDateTime.now();
+        this.updatedAt = this.createdAt;
+    }
+
+    @PreUpdate
+    protected void onUpdate() {
+        this.updatedAt = LocalDateTime.now();
+    }
 
     // 추후에 TripCourse 매핑
 
-    public void update(String title, String content, LocalDate startDate, LocalDate endDate) {
+    public void update(String title, String content) {
         this.title = title;
         this.content = content;
-        this.startDate = startDate;
-        this.endDate = endDate;
+    }
+
+    public void validateOwner(Long requestMemberId) {
+        if (!this.member.getId().equals(requestMemberId)) {
+            throw TripPostAccessDeniedException.accessDenied();
+        }
     }
 }

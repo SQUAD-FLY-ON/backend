@@ -4,7 +4,5 @@ import java.time.LocalDate;
 
 public record TripPostRequest(
         String title,
-        String content,
-        LocalDate startDate,
-        LocalDate endDate
+        String content
 ) {}

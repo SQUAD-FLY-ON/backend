@@ -12,6 +12,8 @@ public interface TripPostMapper {
 
     @Mapping(target = "id", ignore = true)
     @Mapping(target = "member", source = "member")
+    @Mapping(target = "createdAt", ignore = true)
+    @Mapping(target = "updatedAt", ignore = true)
     TripPost toEntity(TripPostRequest request, Member member);
 
     TripPostResponse toResponse(TripPost tripPost);
