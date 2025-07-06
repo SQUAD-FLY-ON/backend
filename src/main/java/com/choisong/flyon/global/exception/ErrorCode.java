@@ -33,10 +33,17 @@ public enum ErrorCode {
      * TripPost Error 200~299
      */
     TRIP_POST_NOT_FOUND(HttpStatus.NOT_FOUND, "200", "여행 게시글을 찾을 수 없습니다."),
-    TRIP_POST_ACCESS_DENIED(HttpStatus.FORBIDDEN, "201", "본인의 글만 수정/삭제할 수 있습니다.");
+    TRIP_POST_ACCESS_DENIED(HttpStatus.FORBIDDEN, "201", "본인의 글만 수정/삭제할 수 있습니다."),
 
+
+    /**
+     * FlightLog Error 300~399
+     */
+    FLIGHT_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "300", "비행 기록을 찾을 수 없습니다."),
+    FLIGHT_LOG_ACCESS_DENIED(HttpStatus.FORBIDDEN, "301", "해당 비행 기록에 접근할 수 없습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
     private final String msg;
+
 }

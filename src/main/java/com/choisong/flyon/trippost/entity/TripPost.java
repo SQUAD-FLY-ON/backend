@@ -5,7 +5,6 @@ import com.choisong.flyon.trippost.exception.TripPostAccessDeniedException;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
