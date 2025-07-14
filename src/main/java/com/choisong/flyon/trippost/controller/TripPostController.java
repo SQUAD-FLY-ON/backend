@@ -76,4 +76,11 @@ public class TripPostController {
                        @AuthenticationMember Long memberId) {
         tripPostService.delete(id, memberId);
     }
+
+    @Operation(summary = "게시글 좋아요 토글", description = "좋아요 누르기/취소하기")
+    @PostMapping("/{id}/likes")
+    public void toggleLike(@PathVariable Long id,
+                           @AuthenticationMember Long memberId) {
+        tripPostService.toggleLike(id, memberId);
+    }
 }
