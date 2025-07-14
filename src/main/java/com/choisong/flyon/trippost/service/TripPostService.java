@@ -73,7 +73,7 @@ public class TripPostService {
         tripPostRepository.delete(post);
     }
 
-    public void toggleLike(Long postId, Long memberId) {
+    public boolean toggleLike(Long postId, Long memberId) {
         TripPost post = tripPostRepository.findById(postId)
                 .orElseThrow(TripPostNotFoundException::tripNotFound);
 
@@ -84,6 +84,7 @@ public class TripPostService {
                     .orElseThrow(TripPostLikeNotFoundException::likeNotFound);
             tripPostLikeRepository.delete(like);
             post.decreaseLike();
+            return false; // 좋아요 취소됨
         } else {
             Member member = memberService.getMemberById(memberId);
             TripPostLike like = TripPostLike.builder()
@@ -92,6 +93,7 @@ public class TripPostService {
                     .build();
             tripPostLikeRepository.save(like);
             post.increaseLike();
+            return true; // 좋아요 등록됨
         }
     }
 }

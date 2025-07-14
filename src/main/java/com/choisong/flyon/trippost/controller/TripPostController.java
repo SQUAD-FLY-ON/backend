@@ -7,9 +7,11 @@ import com.choisong.flyon.trippost.service.TripPostService;
 import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.Map;
 
 @RestController
 @RequiredArgsConstructor
@@ -78,9 +80,12 @@ public class TripPostController {
     }
 
     @Operation(summary = "게시글 좋아요 토글", description = "좋아요 누르기/취소하기")
-    @PostMapping("/{id}/likes")
-    public void toggleLike(@PathVariable Long id,
-                           @AuthenticationMember Long memberId) {
-        tripPostService.toggleLike(id, memberId);
+    @PostMapping("/{postId}/likes")
+    public ResponseEntity<Map<String, String>> toggleLike(@PathVariable Long postId,
+                                                          @AuthenticationMember Long memberId) {
+        boolean isLiked = tripPostService.toggleLike(postId, memberId);
+        Map<String, String> response = Map.of("message",
+                isLiked ? "좋아요가 등록되었습니다." : "좋아요가 취소되었습니다.");
+        return ResponseEntity.ok(response);
     }
 }
