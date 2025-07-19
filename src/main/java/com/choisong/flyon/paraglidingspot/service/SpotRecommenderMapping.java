@@ -1,6 +1,7 @@
 package com.choisong.flyon.paraglidingspot.service;
 
 import com.choisong.flyon.paraglidingspot.dto.RecommendCriteria;
+import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import java.util.EnumMap;
 import org.springframework.stereotype.Component;
 
@@ -9,9 +10,9 @@ public class SpotRecommenderMapping {
 
     private final EnumMap<RecommendCriteria, SpotRecommender>  recommenderMap = new EnumMap<>(RecommendCriteria.class);
 
-    public SpotRecommenderMapping() {
+    public SpotRecommenderMapping(ParaglidingSpotRepository repository) {
         recommenderMap.put(RecommendCriteria.DISTANCE, new NearestSpotRecommender());
-        recommenderMap.put(RecommendCriteria.WEATHER, new GoodWeatherSpotRecommender());
+        recommenderMap.put(RecommendCriteria.WEATHER, new GoodWeatherSpotRecommender(repository));
     }
 
     public SpotRecommender getRecommender(final RecommendCriteria criteria) {

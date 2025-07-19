@@ -1,7 +1,8 @@
 package com.choisong.flyon.paraglidingspot.service;
 
-import com.choisong.flyon.paraglidingspot.controller.ParaglidingSpot;
+import com.choisong.flyon.paraglidingspot.controller.ParaglidingSpotController;
 import com.choisong.flyon.paraglidingspot.dto.RecommendCriteria;
+import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotCoordinateRepository;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
@@ -10,10 +11,10 @@ import org.springframework.stereotype.Component;
 @RequiredArgsConstructor
 public class NearestSpotRecommender implements SpotRecommender {
 
-
+    private final ParaglidingSpotCoordinateRepository coordinateRepository;
 
     @Override
-    public Slice<ParaglidingSpot> getSpotsByCriteria(final RecommendCriteria criteria, final long size) {
-        return null;
+    public Slice<ParaglidingSpotController> getSpotsByCriteria(final RecommendCriteria criteria, final long size) {
+        coordinateRepository.findNearestSpotsWithRadiusLimit()
     }
 }

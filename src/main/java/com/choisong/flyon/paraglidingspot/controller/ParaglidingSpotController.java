@@ -11,13 +11,13 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @RequestMapping("/api/paragliding-spot")
 @RequiredArgsConstructor
-public class ParaglidingSpot {
+public class ParaglidingSpotController {
 
     private final ParaglidingSpotService paraglidingSpotService;
 
     @GetMapping("/recommend")
     public void recommendSpot(@RequestParam final RecommendCriteria criteria, @RequestParam final long size){
-        return paraglidingSpotService.recommandSpot(criteria,size);
+        paraglidingSpotService.recommendSpot(criteria,size);
     }
 
 }

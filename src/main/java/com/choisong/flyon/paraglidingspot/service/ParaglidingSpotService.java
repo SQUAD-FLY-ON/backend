@@ -14,10 +14,11 @@ public class ParaglidingSpotService {
     private final ParaglidingSpotRepository paraglidingSpotRepository;
     private final SpotRecommenderMapping spotRecommenderMapping;
 
-    public void recommandSpot(final RecommendCriteria criteria, final long size){
+    public void recommendSpot(final RecommendCriteria criteria, final long size){
         final SpotRecommender recommender = spotRecommenderMapping.getRecommender(criteria);
-        recommender.getSpotsByCriteria(criteria);
+        recommender.getSpotsByCriteria(criteria,size);
     }
 
 }
+
 
