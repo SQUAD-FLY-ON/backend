@@ -1,10 +1,9 @@
 package com.choisong.flyon.paraglidingspot.service;
 
-import com.choisong.flyon.paraglidingspot.controller.ParaglidingSpotController;
-import com.choisong.flyon.paraglidingspot.dto.RecommendCriteria;
-import org.springframework.data.domain.Slice;
+import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
+import java.util.List;
 
 public interface SpotRecommender {
 
-    Slice<ParaglidingSpotController> getSpotsByCriteria(RecommendCriteria criteria, long size);
+    List<ParaglidingSpot> getSpotsByCurrentLocation(double latitude, double longitude);
 }

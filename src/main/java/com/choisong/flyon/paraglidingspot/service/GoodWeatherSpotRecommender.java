@@ -1,6 +1,7 @@
 package com.choisong.flyon.paraglidingspot.service;
 
 import com.choisong.flyon.paraglidingspot.controller.ParaglidingSpotController;
+import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.dto.RecommendCriteria;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import java.util.List;
@@ -16,8 +17,8 @@ public class GoodWeatherSpotRecommender implements SpotRecommender {
     private final ParaglidingSpotRepository paraglidingSpotRepository;
 
     @Override
-    public Slice<ParaglidingSpotController> getSpotsByCriteria(final RecommendCriteria criteria, final long size) {
-        return new PageImpl<>(List.of());
+    public List<ParaglidingSpot> getSpotsByCurrentLocation(final double latitude, final double longitude) {
+        return List.of();
     }
 }
 
