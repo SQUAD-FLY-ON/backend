@@ -12,6 +12,8 @@ import com.choisong.flyon.trippost.mapper.TripPostMapper;
 import com.choisong.flyon.trippost.repository.TripPostLikeRepository;
 import com.choisong.flyon.trippost.repository.TripPostRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -23,35 +25,47 @@ import java.util.List;
 public class TripPostService {
 
     private final TripPostRepository tripPostRepository;
-    private final TripPostMapper TripPostmapper;
+    private final TripPostMapper tripPostmapper;
     private final MemberService memberService;
     private final TripPostLikeRepository tripPostLikeRepository;
 
     public TripPostResponse create(TripPostRequest request, Long memberId) {
         Member member = memberService.getMemberById(memberId);
-        TripPost entity = TripPostmapper.toEntity(request, member);
-        return TripPostmapper.toResponse(tripPostRepository.save(entity));
+        TripPost entity = tripPostmapper.toEntity(request, member);
+        return tripPostmapper.toResponse(tripPostRepository.save(entity));
     }
 
     @Transactional(readOnly = true)
     public TripPostResponse getById(Long id) {
         TripPost post = tripPostRepository.findById(id)
                 .orElseThrow(TripPostNotFoundException::tripNotFound);
-        return TripPostmapper.toResponse(post);
+        return tripPostmapper.toResponse(post);
     }
 
     @Transactional(readOnly = true)
     public List<TripPostResponse> getAll() {
         return tripPostRepository.findAll().stream()
-                .map(TripPostmapper::toResponse)
+                .map(tripPostmapper::toResponse)
                 .toList();
     }
 
     @Transactional(readOnly = true)
     public List<TripPostResponse> getByMemberId(Long memberId) {
         return tripPostRepository.findByMemberId(memberId).stream()
-                .map(TripPostmapper::toResponse)
+                .map(tripPostmapper::toResponse)
                 .toList();
+    }
+
+    public Page<TripPostResponse> getSortedPosts(String sort, Pageable pageable) {
+        Page<TripPost> posts;
+
+        if ("likes".equalsIgnoreCase(sort)) {
+            posts = tripPostRepository.findAllByOrderByLikeCountDesc(pageable);
+        } else {
+            posts = tripPostRepository.findAllByOrderByCreatedAtDesc(pageable);
+        }
+
+        return posts.map(tripPostmapper::toResponse);
     }
 
     public TripPostResponse update(Long id, TripPostRequest request, Long memberId) {
@@ -61,7 +75,7 @@ public class TripPostService {
         post.validateOwner(memberId);
 
         post.update(request.title(), request.content());
-        return TripPostmapper.toResponse(post);
+        return tripPostmapper.toResponse(post);
     }
 
     public void delete(Long id, Long memberId) {
@@ -73,7 +87,7 @@ public class TripPostService {
         tripPostRepository.delete(post);
     }
 
-    public boolean toggleLike(Long postId, Long memberId) {
+    public boolean toggleLike(Long postId, Long memberId) { // 토글 방식으로 구현했습니다.
         TripPost post = tripPostRepository.findById(postId)
                 .orElseThrow(TripPostNotFoundException::tripNotFound);
 
@@ -84,7 +98,7 @@ public class TripPostService {
                     .orElseThrow(TripPostLikeNotFoundException::likeNotFound);
             tripPostLikeRepository.delete(like);
             post.decreaseLike();
-            return false; // 좋아요 취소됨
+            return false; // 좋아요 취소
         } else {
             Member member = memberService.getMemberById(memberId);
             TripPostLike like = TripPostLike.builder()
@@ -93,7 +107,7 @@ public class TripPostService {
                     .build();
             tripPostLikeRepository.save(like);
             post.increaseLike();
-            return true; // 좋아요 등록됨
+            return true; // 좋아요 등록
         }
     }
 }

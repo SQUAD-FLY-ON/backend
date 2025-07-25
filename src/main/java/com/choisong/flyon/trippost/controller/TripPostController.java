@@ -5,8 +5,11 @@ import com.choisong.flyon.trippost.dto.TripPostRequest;
 import com.choisong.flyon.trippost.dto.TripPostResponse;
 import com.choisong.flyon.trippost.service.TripPostService;
 import io.swagger.v3.oas.annotations.Operation;
+import io.swagger.v3.oas.annotations.Parameter;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
@@ -47,6 +50,13 @@ public class TripPostController {
     @GetMapping
     public List<TripPostResponse> getAll() {
         return tripPostService.getAll();
+    }
+
+    @GetMapping("/sorted")
+    @Operation(summary = "정렬된 게시글 조회", description = "최신순 또는 좋아요 수 순으로 게시글을 정렬하여 조회합니다.")
+    public Page<TripPostResponse> getSortedPosts(@RequestParam(defaultValue = "latest") String sort,
+                                                 @Parameter(hidden = true) Pageable pageable) {
+        return tripPostService.getSortedPosts(sort, pageable);
     }
 
     /**
