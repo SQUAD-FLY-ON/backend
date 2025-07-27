@@ -1,10 +1,9 @@
 package com.choisong.flyon.paraglidingspot.dto;
 
+import java.util.List;
+
 public record ParaglidingSpotRecommendResponse(
-    Long paraglidingSpotId,
-    String spotName,
-    String imgUrl,
-    double starts
+    List<RecommendSpot> recommendSpotList
 ) {
 
 }

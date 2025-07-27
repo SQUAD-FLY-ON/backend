@@ -39,7 +39,7 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
     private void saveToRedis(final List<ParaglidingSpot> entities) {
         coordinateRepository.flushAllCoordinates();
         entities.forEach(e->coordinateRepository.addLocation(e.getCoordinate().getLatitude(),
-            e.getCoordinate().getLatitude(),e.getId()));
+            e.getCoordinate().getLongitude(),e.getId()));
     }
 
     private List<ParaglidingSpot> getParaglidingSpots(final List<ParaglidingSpotCsv> dtos) {

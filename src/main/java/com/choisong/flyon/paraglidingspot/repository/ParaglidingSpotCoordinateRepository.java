@@ -49,8 +49,8 @@ public class ParaglidingSpotCoordinateRepository {
         }
 
         return results.getContent().stream()
-            .map(result -> (Long)result.getContent().getName())
-            .collect(Collectors.toList());
+            .map(result -> Long.parseLong((String) result.getContent().getName()))
+            .toList();
     }
 
     private GeoResults<GeoLocation<Object>> getResults(final double maxDistanceKm, final int limit, final Point center) {
