@@ -30,6 +30,9 @@ public class ParaglidingSpotCsv {
     @CsvBindByName(column = "phoneNumber")
     private String phoneNumber;
 
-    @CsvBindByName(column = "websitUrl")
+    @CsvBindByName(column = "websiteUrl")
     private String websiteUrl;
+
+    @CsvBindByName(column = "forecastCode")
+    private String forecastCode;
 }

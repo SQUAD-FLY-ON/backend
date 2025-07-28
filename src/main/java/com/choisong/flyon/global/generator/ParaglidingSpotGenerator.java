@@ -27,7 +27,7 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
         if (repository.count() > 0) {
             return;
         }
-        try (InputStream is = getClass().getClassLoader().getResourceAsStream("data/paragliding-spot.csv");
+        try (InputStream is = getClass().getClassLoader().getResourceAsStream("data/facility.csv");
             InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
             List<ParaglidingSpotCsv> dtos = getParaglidingSpotCsvs(reader);
             List<ParaglidingSpot> entities = getParaglidingSpots(dtos);
