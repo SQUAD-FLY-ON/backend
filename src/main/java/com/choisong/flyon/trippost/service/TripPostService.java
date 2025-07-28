@@ -12,8 +12,7 @@ import com.choisong.flyon.trippost.mapper.TripPostMapper;
 import com.choisong.flyon.trippost.repository.TripPostLikeRepository;
 import com.choisong.flyon.trippost.repository.TripPostRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
-import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.*;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -56,16 +55,18 @@ public class TripPostService {
                 .toList();
     }
 
-    public Page<TripPostResponse> getSortedPosts(String sort, Pageable pageable) {
-        Page<TripPost> posts;
+    public Slice<TripPostResponse> getSortedPosts(int page, int size, String sortType) {
+        Sort sort = "like".equals(sortType)
+                ? Sort.by(Sort.Direction.DESC, "likeCount")
+                : Sort.by(Sort.Direction.DESC, "createdAt");
 
-        if ("likes".equalsIgnoreCase(sort)) {
-            posts = tripPostRepository.findAllByOrderByLikeCountDesc(pageable);
-        } else {
-            posts = tripPostRepository.findAllByOrderByCreatedAtDesc(pageable);
-        }
+        Pageable pageable = PageRequest.of(page, size, sort);
 
-        return posts.map(tripPostmapper::toResponse);
+        Slice<TripPost> result = "like".equals(sortType)
+                ? tripPostRepository.findAllByOrderByLikeCountDesc(pageable)
+                : tripPostRepository.findAllByOrderByCreatedAtDesc(pageable);
+
+        return result.map(tripPostmapper::toResponse);
     }
 
     public TripPostResponse update(Long id, TripPostRequest request, Long memberId) {

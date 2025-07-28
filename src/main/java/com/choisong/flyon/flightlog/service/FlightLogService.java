@@ -7,8 +7,9 @@ import com.choisong.flyon.flightlog.exception.FlightLogNotFoundException;
 import com.choisong.flyon.flightlog.mapper.FlightLogMapper;
 import com.choisong.flyon.flightlog.repository.FlightLogRepository;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
+import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
 
 
@@ -25,8 +26,9 @@ public class FlightLogService {
         return flightLogMapper.toResponse(saved);
     }
 
-    public Page<FlightLogResponse> getByMemberId(Long memberId, Pageable pageable) {
-        return flightLogRepository.findByMemberId(memberId, pageable)
+    public Slice<FlightLogResponse> getMyFlightLogs(Long memberId, int page, int size) {
+        Pageable pageable = PageRequest.of(page, size);
+        return flightLogRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable)
                 .map(flightLogMapper::toResponse);
     }
 
