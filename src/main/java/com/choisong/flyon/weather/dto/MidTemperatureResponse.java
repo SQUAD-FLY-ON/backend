@@ -1,4 +1,4 @@
-package com.choisong.flyon.forecast.dto;
+package com.choisong.flyon.weather.dto;
 
 public record MidTemperatureResponse(
     WeatherApiResponse<MidTemperatureItem> response

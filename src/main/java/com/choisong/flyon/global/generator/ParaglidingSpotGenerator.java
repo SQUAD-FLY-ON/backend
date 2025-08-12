@@ -4,11 +4,17 @@ import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotCoordinateRepository;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
+import com.choisong.flyon.weather.domain.Weather;
+import com.choisong.flyon.weather.repository.WeatherRepository;
+import com.choisong.flyon.weather.service.WeatherScheduler;
 import com.opencsv.bean.CsvToBeanBuilder;
 import java.io.InputStream;
 import java.io.InputStreamReader;
 import java.nio.charset.StandardCharsets;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
 import org.springframework.data.redis.core.RedisTemplate;
@@ -21,6 +27,8 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
     private final ParaglidingSpotRepository repository;
     private final ParaglidingSpotMapper mapper;
     private final ParaglidingSpotCoordinateRepository coordinateRepository;
+    private final WeatherRepository weatherRepository;
+    private final WeatherScheduler weatherScheduler;
 
     @Override
     public void run(final String... args) throws Exception {
@@ -33,7 +41,24 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
             List<ParaglidingSpot> entities = getParaglidingSpots(dtos);
             repository.saveAll(entities);
             saveToRedis(entities);
+            saveWeather(dtos);
+            weatherScheduler.scheduleMidWeather();
+            weatherScheduler.scheduleVilageWeather();
         }
+    }
+
+    private void saveWeather(final List<ParaglidingSpotCsv> dtos) {
+        Set<String> set =  new HashSet<>();
+        List<Weather>  weathers = new ArrayList<>();
+        dtos.forEach(dto -> {
+            String key = dto.getSido() + dto.getSigungu();
+            if(!set.contains(key)) {
+                weathers.add(new Weather(dto.getSido(), dto.getSigungu(),dto.getMidTempCode(),dto.getMidWeatherCode()
+                    ,dto.getX().intValue(),dto.getY().intValue()));
+                set.add(key);
+            }
+        });
+        weatherRepository.saveAll(weathers);
     }
 
     private void saveToRedis(final List<ParaglidingSpot> entities) {

@@ -1,8 +1,8 @@
-package com.choisong.flyon.forecast.config;
+package com.choisong.flyon.weather.config;
 
-import com.choisong.flyon.forecast.infrastructure.MidLandForecastClient;
-import com.choisong.flyon.forecast.infrastructure.MidTemperatureClient;
-import org.springframework.beans.factory.annotation.Value;
+import com.choisong.flyon.weather.infrastructure.MidLandForecastClient;
+import com.choisong.flyon.weather.infrastructure.MidTemperatureClient;
+import com.choisong.flyon.weather.infrastructure.VilageForecastClient;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
 import org.springframework.web.client.RestClient;
@@ -27,4 +27,13 @@ public class WeatherApiRestClientConfig {
         HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
         return factory.createClient(MidTemperatureClient.class);
     }
+
+    @Bean
+    VilageForecastClient vilageForecastClient() {
+        RestClient restClient = RestClient.create();
+        RestClientAdapter restClientAdapter = RestClientAdapter.create(restClient);
+        HttpServiceProxyFactory factory = HttpServiceProxyFactory.builderFor(restClientAdapter).build();
+        return factory.createClient(VilageForecastClient.class);
+    }
+
 }
