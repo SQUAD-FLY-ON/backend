@@ -54,9 +54,11 @@ dependencies {
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-
+	
 	// OpenCSV
 	implementation 'com.opencsv:opencsv:5.9'
+	// mongodb
+	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
 }
 
 tasks.named('test') {

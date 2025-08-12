@@ -5,7 +5,6 @@ import com.choisong.flyon.trippost.exception.TripPostAccessDeniedException;
 import jakarta.persistence.*;
 import lombok.*;
 
-import java.time.LocalDate;
 import java.time.LocalDateTime;
 
 @Entity
@@ -32,6 +31,17 @@ public class TripPost {
 
     @Column(nullable = false)
     private LocalDateTime updatedAt;
+
+    @Column(nullable = false)
+    private int likeCount;
+
+    public void increaseLike() {
+        this.likeCount++;
+    }
+
+    public void decreaseLike() {
+        this.likeCount--;
+    }
 
     @PrePersist
     protected void onCreate() {
