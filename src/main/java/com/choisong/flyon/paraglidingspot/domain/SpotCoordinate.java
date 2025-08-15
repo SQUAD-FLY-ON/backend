@@ -8,13 +8,13 @@ import lombok.NoArgsConstructor;
 @Embeddable
 @Getter
 @NoArgsConstructor
-public class Coordinate {
+public class SpotCoordinate {
 
     private double latitude;
     private double longitude;
 
     @Builder
-    public Coordinate(final double latitude, final double longitude) {
+    public SpotCoordinate(final double latitude, final double longitude) {
         this.latitude = latitude;
         this.longitude = longitude;
     }

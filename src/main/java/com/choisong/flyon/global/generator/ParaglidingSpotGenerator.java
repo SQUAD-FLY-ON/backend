@@ -17,7 +17,6 @@ import java.util.List;
 import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.boot.CommandLineRunner;
-import org.springframework.data.redis.core.RedisTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -63,8 +62,8 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
 
     private void saveToRedis(final List<ParaglidingSpot> entities) {
         coordinateRepository.flushAllCoordinates();
-        entities.forEach(e->coordinateRepository.addLocation(e.getCoordinate().getLatitude(),
-            e.getCoordinate().getLongitude(),e.getId()));
+        entities.forEach(e->coordinateRepository.addLocation(e.getSpotCoordinate().getLatitude(),
+            e.getSpotCoordinate().getLongitude(),e.getId()));
     }
 
     private List<ParaglidingSpot> getParaglidingSpots(final List<ParaglidingSpotCsv> dtos) {

@@ -54,11 +54,14 @@ dependencies {
 
 	// Spring Security
 	implementation 'org.springframework.boot:spring-boot-starter-security'
-	
+
 	// OpenCSV
 	implementation 'com.opencsv:opencsv:5.9'
 	// mongodb
 	implementation 'org.springframework.boot:spring-boot-starter-data-mongodb'
+
+	// Hibernate Spatial
+	implementation 'org.hibernate:hibernate-spatial:6.5.3.Final'
 }
 
 tasks.named('test') {

@@ -1,10 +1,9 @@
 package com.choisong.flyon.paraglidingspot.dto;
 
 public record RecommendSpot(
-    Long paraglidingSpotId,
+    Long id,
     String spotName,
-    String imgUrl,
-    double starts
+    String imgUrl
 ) {
 
 }
