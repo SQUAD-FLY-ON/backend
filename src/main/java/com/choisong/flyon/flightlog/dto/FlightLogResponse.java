@@ -8,6 +8,7 @@ public record FlightLogResponse(
         double flightTime,
         double flightDistance,
         double averageSpeed,
+        int flightAltitude,
         String videoUrl,
         LocalDateTime createdAt
 ) {}
