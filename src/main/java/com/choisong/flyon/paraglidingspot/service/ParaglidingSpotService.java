@@ -6,6 +6,8 @@ import com.choisong.flyon.paraglidingspot.dto.ParaglidingSpotRecommendResponse;
 import com.choisong.flyon.paraglidingspot.dto.RecommendSpot;
 import com.choisong.flyon.paraglidingspot.dto.SearchBoxRequest;
 import com.choisong.flyon.paraglidingspot.dto.SearchedSpotResponse;
+import com.choisong.flyon.paraglidingspot.dto.SpotResponse;
+import com.choisong.flyon.paraglidingspot.exception.SpotNotFoundException;
 import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import java.util.List;
@@ -33,6 +35,12 @@ public class ParaglidingSpotService {
         List<RecommendSpot> list = paraglidingSpots.stream().map(paraglidingSpotMapper::toRecommendSpotResponse)
             .toList();
         return new ParaglidingSpotRecommendResponse(list);
+    }
+
+    public SpotResponse findById(final Long id){
+        return paraglidingSpotRepository.findById(id)
+            .map(paraglidingSpotMapper::toSpotResponse)
+            .orElseThrow(SpotNotFoundException::notFound);
     }
 
     public SearchedSpotResponse searchSpots(final SearchBoxRequest request) {

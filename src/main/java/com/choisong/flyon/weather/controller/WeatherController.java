@@ -12,7 +12,7 @@ import org.springframework.web.bind.annotation.RestController;
 @RequestMapping("/api/weather")
 @RequiredArgsConstructor
 @RestController
-@Tag(name = "날씨")
+@Tag(name = "지역별 날씨")
 public class WeatherController {
 
     private final WeatherService weatherService;
@@ -25,5 +25,4 @@ public class WeatherController {
     ){
         return weatherService.getSidoWeatherResponse(sido,tripStart,tripEnd);
     }
-
 }

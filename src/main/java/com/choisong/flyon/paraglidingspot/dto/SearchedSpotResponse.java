@@ -9,11 +9,8 @@ public record SearchedSpotResponse(
         String id,
         String name,
         String fullAddress,
-        String imgUrl,
-        String phoneNumber,
-        String websiteUrl
+        String imgUrl
     ) {
 
     }
-
 }

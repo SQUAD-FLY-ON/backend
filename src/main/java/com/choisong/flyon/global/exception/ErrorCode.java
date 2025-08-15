@@ -43,7 +43,12 @@ public enum ErrorCode {
      * FlightLog Error 300~399
      */
     FLIGHT_LOG_NOT_FOUND(HttpStatus.NOT_FOUND, "300", "비행 기록을 찾을 수 없습니다."),
-    FLIGHT_LOG_ACCESS_DENIED(HttpStatus.FORBIDDEN, "301", "해당 비행 기록에 접근할 수 없습니다.");
+    FLIGHT_LOG_ACCESS_DENIED(HttpStatus.FORBIDDEN, "301", "해당 비행 기록에 접근할 수 없습니다."),
+
+    /**
+     * Paragliding Spot Erorr 400~499
+     */
+    SPOT_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "체험장을 찾을 수 없습니다");
 
     private final HttpStatus httpStatus;
     private final String code;

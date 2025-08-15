@@ -4,6 +4,7 @@ import com.choisong.flyon.global.generator.ParaglidingSpotCsv;
 import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.dto.RecommendSpot;
 import com.choisong.flyon.paraglidingspot.dto.SearchedSpotResponse;
+import com.choisong.flyon.paraglidingspot.dto.SpotResponse;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -25,4 +26,7 @@ public interface ParaglidingSpotMapper {
 
     @Mapping(target = "name", source = "facilityName")
     SearchedSpotResponse.SearchedSpot toSearchedSpotResponse(ParaglidingSpot paraglidingSpot);
+
+    @Mapping(target = "name", source = "facilityName")
+    SpotResponse toSpotResponse(ParaglidingSpot paraglidingSpot);
 }

@@ -24,7 +24,7 @@ public class MemberController {
     @PostMapping
     @NoAuthRequired
     @Operation(summary =
-        "Fly:On 자체 회원 가입 [소셜로그인X]", description = "소셜로그인이 아닌 ID Password 방식의 로그인입니다. 후에 Deprecated 될 수 있습니다.")
+        "Fly:On 자체 회원 가입 [소셜로그인X]", description = "소셜로그인이 아닌 ID Password 방식의 로그인입니다.")
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody MemberRegisterRequest request) {
         memberService.createMember(request);
