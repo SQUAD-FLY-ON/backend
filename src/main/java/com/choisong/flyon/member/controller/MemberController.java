@@ -1,5 +1,6 @@
 package com.choisong.flyon.member.controller;
 
+import com.choisong.flyon.member.dto.MemberInfoResponse;
 import com.choisong.flyon.member.dto.MemberRegisterRequest;
 import com.choisong.flyon.member.service.MemberService;
 import com.choisong.flyon.security.annotation.NoAuthRequired;
@@ -7,6 +8,8 @@ import io.swagger.v3.oas.annotations.Operation;
 import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -28,5 +31,12 @@ public class MemberController {
     @ResponseStatus(HttpStatus.CREATED)
     public void register(@RequestBody MemberRegisterRequest request) {
         memberService.createMember(request);
+    }
+
+    @GetMapping("/{memberId}")
+    @Operation(summary =
+        "회원 정보 조회", description = "회원 정보를 조회합니다. 닉네임, 뱃지, 뱃지 고도, 비행한 고도")
+    public MemberInfoResponse findMember(@PathVariable Long memberId) {
+        return memberService.findMemberInfo(memberId);
     }
 }

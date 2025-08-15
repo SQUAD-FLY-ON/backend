@@ -21,6 +21,9 @@ import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
+import org.springframework.retry.annotation.Backoff;
+import org.springframework.retry.annotation.Recover;
+import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
@@ -38,18 +41,55 @@ public class WeatherScheduler {
     @Value("${weather.api.key}")
     private String apiKey;
 
-    private MidLandForecastResponse getMidLandForecastResponse(String code) {
-        return midLandForecastClient.getMidLandForecast(apiKey, 1, 1, "JSON", code, DateUtil.getCurrentBaseDateHour());
+    @Retryable(
+        value = Exception.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 2000)
+    )
+    MidLandForecastResponse getMidLandForecastResponse(String code) {
+        return midLandForecastClient.getMidLandForecast(
+            apiKey, 1, 1, "JSON", code, DateUtil.getCurrentBaseDateHour()
+        );
     }
 
-    private MidTemperatureResponse getMidTemperatureResponse(String code) {
-        return midTemperatureClient.getMidTemperatureForecast(apiKey, 1, 1, "JSON", code,
-            DateUtil.getCurrentBaseDateHour());
+    @Retryable(
+        value = Exception.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 2000)
+    )
+    MidTemperatureResponse getMidTemperatureResponse(String code) {
+        return midTemperatureClient.getMidTemperatureForecast(
+            apiKey, 1, 1, "JSON", code, DateUtil.getCurrentBaseDateHour()
+        );
     }
 
-    private VilageForecastResponse getVilageForecast(int x, int y) {
-        return vilageForecastClient.getVilageForecast(apiKey, 1000, 1, "JSON", DateUtil.getCurrentDate(),
-            "1400", x, y);
+    @Retryable(
+        value = Exception.class,
+        maxAttempts = 3,
+        backoff = @Backoff(delay = 2000)
+    )
+    VilageForecastResponse getVilageForecast(int x, int y) {
+        return vilageForecastClient.getVilageForecast(
+            apiKey, 1000, 1, "JSON", DateUtil.getCurrentDate(), "1400", x, y
+        );
+    }
+
+    @Recover
+    MidLandForecastResponse recoverMidLand(Exception e, String code) {
+        log.error("MidLandForecast 최종 실패 (code={})", code, e);
+        return null;
+    }
+
+    @Recover
+    MidTemperatureResponse recoverMidTemp(Exception e, String code) {
+        log.error("MidTemperature 최종 실패 (code={})", code, e);
+        return null;
+    }
+
+    @Recover
+    VilageForecastResponse recoverVilage(Exception e, int x, int y) {
+        log.error("VilageForecast 최종 실패 (x={}, y={})", x, y, e);
+        return null;
     }
 
     @Scheduled(cron = "0 15 6 * * *", zone = "Asia/Seoul")

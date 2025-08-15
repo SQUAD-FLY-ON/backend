@@ -1,16 +1,16 @@
 package com.choisong.flyon.member.service;
 
 
-import com.choisong.flyon.jwt.service.JwtService;
 import com.choisong.flyon.member.domain.Member;
 import com.choisong.flyon.member.domain.MemberRole;
 import com.choisong.flyon.member.domain.Roles;
+import com.choisong.flyon.member.dto.MemberInfoResponse;
 import com.choisong.flyon.member.dto.MemberRegisterRequest;
 import com.choisong.flyon.member.exception.LoginIdDuplicatedException;
 import com.choisong.flyon.member.exception.MemberNotFoundException;
 import com.choisong.flyon.member.exception.NicknameDuplicatedException;
-import com.choisong.flyon.member.repository.MemberRepository;
 import com.choisong.flyon.member.mapper.MemberMapper;
+import com.choisong.flyon.member.repository.MemberRepository;
 import com.choisong.flyon.member.repository.RoleRepository;
 import com.choisong.flyon.oauth.provider.OauthMember;
 import lombok.RequiredArgsConstructor;
@@ -47,9 +47,14 @@ public class MemberService {
         validateLoginId(request.loginId());
         validateNickName(request.nickname());
         String encodePassword = encodePassword(request.password());
-        Member member = memberMapper.from(request,encodePassword);
+        Member member = memberMapper.toEntity(request,encodePassword);
         memberRepository.save(member);
         roleRepository.save(new Roles(member.getId(), MemberRole.ROLE_MEMBER));
+    }
+
+    public MemberInfoResponse findMemberInfo(final Long memberId){
+        Member member = getMemberById(memberId);
+        return memberMapper.toMemberInfoResponse(member);
     }
 
     private String encodePassword(final String password) {
@@ -69,7 +74,7 @@ public class MemberService {
     }
 
     private Long createOauthMember(final OauthMember oauthMember) {
-        final Member newMember = memberMapper.from(oauthMember);
+        final Member newMember = memberMapper.toEntity(oauthMember);
         return memberRepository.save(newMember).getId();
     }
 

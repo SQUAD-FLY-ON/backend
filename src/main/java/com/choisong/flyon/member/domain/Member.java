@@ -26,6 +26,9 @@ public class Member {
     private String loginId;
     private String encodedPassword;
     private String imgUrl;
+    @Enumerated(EnumType.STRING)
+    private GliderBadge gliderBadge;
+    private Integer totalJumpAltitude;
 
     @Builder
     public Member(final OauthProviderType oauthProviderType, final String oauth2Id, final String nickname,
@@ -37,10 +40,17 @@ public class Member {
         this.loginId = loginId;
         this.encodedPassword = encodedPassword;
         this.imgUrl = imgUrl;
+        this.gliderBadge = GliderBadge.Namsan;
+        totalJumpAltitude = 0;
     }
 
     public void updateNicknameAndImgUrl(final String nickname, final String imgUrl) {
         this.nickname = nickname;
         this.imgUrl = imgUrl;
+    }
+
+    public void increaseJumpAltitude(final Integer altitude) {
+        totalJumpAltitude += altitude;
+        this.gliderBadge = GliderBadge.fromAltitude(totalJumpAltitude);
     }
 }

@@ -5,5 +5,6 @@ public record FlightLogRequest(
         double flightTime,
         double flightDistance,
         double averageSpeed,
+        int jumpAltitude,
         String videoUrl
 ) {}

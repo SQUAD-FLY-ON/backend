@@ -62,6 +62,10 @@ dependencies {
 
 	// Hibernate Spatial
 	implementation 'org.hibernate:hibernate-spatial:6.5.3.Final'
+
+	// Retryable
+	implementation 'org.springframework.retry:spring-retry'
+	implementation 'org.springframework.boot:spring-boot-starter-aop'
 }
 
 tasks.named('test') {
