@@ -66,6 +66,9 @@ dependencies {
 	// Retryable
 	implementation 'org.springframework.retry:spring-retry'
 	implementation 'org.springframework.boot:spring-boot-starter-aop'
+
+	//GPT
+	implementation("com.openai:openai-java:3.0.3")
 }
 
 tasks.named('test') {
