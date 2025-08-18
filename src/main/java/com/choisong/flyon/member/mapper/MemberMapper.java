@@ -1,14 +1,20 @@
 package com.choisong.flyon.member.mapper;
 
 import com.choisong.flyon.member.domain.Member;
+import com.choisong.flyon.member.dto.MemberInfoResponse;
 import com.choisong.flyon.member.dto.MemberRegisterRequest;
 import com.choisong.flyon.oauth.provider.OauthMember;
 import org.mapstruct.Mapper;
+import org.mapstruct.Mapping;
 
 @Mapper(componentModel = "spring")
 public interface MemberMapper {
 
-    Member from(OauthMember oauth2Member);
+    Member toEntity(OauthMember oauth2Member);
 
-    Member from(MemberRegisterRequest memberRegisterRequest,String encodedPassword);
+    Member toEntity(MemberRegisterRequest memberRegisterRequest,String encodedPassword);
+
+    @Mapping(target = "gliderBadge", expression = "java(member.getGliderBadge().getDisplayName())")
+    @Mapping(target = "badgeAltitude", expression = "java(member.getGliderBadge().getHeight())")
+    MemberInfoResponse toMemberInfoResponse(Member member);
 }

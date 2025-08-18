@@ -6,23 +6,30 @@ import com.choisong.flyon.flightlog.exception.FlightLogAccessDeniedException;
 import com.choisong.flyon.flightlog.exception.FlightLogNotFoundException;
 import com.choisong.flyon.flightlog.mapper.FlightLogMapper;
 import com.choisong.flyon.flightlog.repository.FlightLogRepository;
+import com.choisong.flyon.member.domain.Member;
+import com.choisong.flyon.member.service.MemberService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Service;
+import org.springframework.transaction.annotation.Transactional;
 
 
 @Service
 @RequiredArgsConstructor
+@Transactional
 public class FlightLogService {
 
     private final FlightLogRepository flightLogRepository;
     private final FlightLogMapper flightLogMapper;
+    private final MemberService memberService;
 
     public FlightLogResponse create(FlightLogRequest request, Long memberId) {
         var entity = flightLogMapper.toEntity(request, memberId);
         var saved = flightLogRepository.save(entity);
+        var member = memberService.getMemberById(memberId);
+        member.increaseJumpAltitude(request.jumpAltitude());
         return flightLogMapper.toResponse(saved);
     }
 
