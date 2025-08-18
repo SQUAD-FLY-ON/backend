@@ -24,7 +24,12 @@ public interface ParaglidingSpotMapper {
     @Mapping(target = "imgUrl", source = "imgUrl")
     RecommendSpot toRecommendSpotResponse(ParaglidingSpot paraglidingSpot);
 
+    @Mapping(target = "id", expression = "java(String.valueOf(paraglidingSpot.getId()))")
     @Mapping(target = "name", source = "facilityName")
+    @Mapping(target = "fullAddress", source = "address.fullAddress")
+    @Mapping(target = "imgUrl", source = "imgUrl")
+    @Mapping(target = "latitude", source = "spotCoordinate.latitude")
+    @Mapping(target = "longitude", source = "spotCoordinate.longitude")
     SearchedSpotResponse.SearchedSpot toSearchedSpotResponse(ParaglidingSpot paraglidingSpot);
 
     @Mapping(target = "name", source = "facilityName")
