@@ -1,5 +1,6 @@
 package com.choisong.flyon.global.generator;
 
+import com.choisong.flyon.gpt.service.GptService;
 import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotCoordinateRepository;
@@ -29,8 +30,10 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
     private final WeatherRepository weatherRepository;
     private final WeatherScheduler weatherScheduler;
 
+//    private final GptService gptService;
     @Override
     public void run(final String... args) throws Exception {
+//        gptService.summarize("hihi how are you gpt??");
         if (repository.count() > 0) {
             return;
         }
