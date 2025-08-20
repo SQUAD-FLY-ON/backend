@@ -39,10 +39,7 @@ public class JwtService {
         return new MemberTokens(accessToken, refreshToken);
     }
 
-    public void logout(final Optional<Cookie> cookie) {
-        final Cookie tokenCookie = cookie.orElseThrow(
-            TokenNotFoundException::refreshTokenCookieNotFound);
-        final String refreshToken = tokenCookie.getValue();
+    public void logout(final String refreshToken) {
         refreshTokenRepository.deleteById(refreshToken);
     }
 }
