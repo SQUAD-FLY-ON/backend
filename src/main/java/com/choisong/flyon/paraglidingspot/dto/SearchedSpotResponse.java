@@ -9,7 +9,9 @@ public record SearchedSpotResponse(
         String id,
         String name,
         String fullAddress,
-        String imgUrl
+        String imgUrl,
+        double latitude,
+        double longitude
     ) {
 
     }
