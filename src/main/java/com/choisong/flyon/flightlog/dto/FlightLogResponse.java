@@ -1,6 +1,7 @@
 package com.choisong.flyon.flightlog.dto;
 
 import java.time.LocalDateTime;
+import java.util.List;
 
 public record FlightLogResponse(
         String id,
@@ -10,5 +11,6 @@ public record FlightLogResponse(
         double averageSpeed,
         int flightAltitude,
         String videoUrl,
-        LocalDateTime createdAt
+        LocalDateTime createdAt,
+        List<TrackPointDto> track
 ) {}
