@@ -4,7 +4,10 @@ import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import com.choisong.flyon.weather.domain.Weather;
 import com.choisong.flyon.weather.repository.WeatherRepository;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 
@@ -20,7 +23,10 @@ public class GoodWeatherSpotRecommender implements SpotRecommender {
         List<Weather> weathers = weatherRepository.findAll();
         List<Weather> goodWeather = weathers.stream().filter(Weather::isGoodWeatherExist)
             .toList();
-            return List.of();
+        List<ParaglidingSpot> goodWeatherSpot = new ArrayList<>();
+        goodWeather.forEach(w -> goodWeatherSpot.addAll(paraglidingSpotRepository.findByAddress(w.getSido(),
+            w.getSigungu())));
+        return goodWeatherSpot;
     }
 }
 

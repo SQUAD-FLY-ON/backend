@@ -14,4 +14,6 @@ public interface ParaglidingSpotRepository extends JpaRepository<ParaglidingSpot
     @Query("select ps from ParaglidingSpot ps where st_contains(st_buffer(:center,:radius),ps.point)")
     List<ParaglidingSpot> findByCenterAndRadius(@Param("center") Point center, @Param("radius") Integer radius);
 
+    @Query("select ps  from ParaglidingSpot ps where ps.address.sido = :sido and ps.address.sigungu = :sigungu")
+    List<ParaglidingSpot> findByAddress(String sido, String sigungu);
 }
