@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/flyon:latest -f Docker.dev .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/flyon:latest -f Dockerfile.dev .
 
       - name: Push Docker image to Docker Hub
         run: |
