@@ -20,7 +20,7 @@ jobs:
           java-version: 21  
 
       - name: Copy application-prod.yml
-        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-prod.yml
+        run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
       - name: SSH into GCP VM and deploy
         uses: appleboy/ssh-action@master
@@ -29,16 +29,16 @@ jobs:
           username: ${{ secrets.GCP_VM_USER }}
           key: ${{ secrets.GCP_SSH_KEY }}
           script: |
-            cd ~/GDGoc-TUK-Official-Backend/
+            cd ~/backend/
 
             sudo git pull
             
             echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
             
-            sudo docker compose -f docker-compose.prod.yml down || true
+            sudo docker compose -f docker-compose.dev.yml down || true
             
-            sudo docker compose -f docker-compose.prod.yml pull
+            sudo docker compose -f docker-compose.dev.yml pull
             
-            sudo docker compose -f docker-compose.prod.yml up -d
+            sudo docker compose -f docker-compose.dev.yml up -d
             
             sudo docker image prune -f
