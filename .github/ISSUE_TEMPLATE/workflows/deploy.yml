@@ -22,6 +22,17 @@ jobs:
       - name: Copy application-prod.yml
         run: echo "${{ secrets.APPLICATION_PROPERTIES }}" > src/main/resources/application-dev.yml
 
+      - name: Log in to Docker Hub (GitHub Actions)
+        run: echo "${{ secrets.DOCKER_HUB_PASSWORD }}" | docker login -u "${{ secrets.DOCKER_HUB_USERNAME }}" --password-stdin
+
+      - name: Build Docker image
+        run: |
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/flyon:latest .
+
+      - name: Push Docker image to Docker Hub
+        run: |
+          docker push ${{ secrets.DOCKER_HUB_USERNAME }}/flyon:latest
+
       - name: SSH into GCP VM and deploy
         uses: appleboy/ssh-action@master
         with:
