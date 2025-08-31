@@ -27,7 +27,7 @@ jobs:
 
       - name: Build Docker image
         run: |
-          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/flyon:latest .
+          docker build -t ${{ secrets.DOCKER_HUB_USERNAME }}/flyon:latest -f Docker.dev .
 
       - name: Push Docker image to Docker Hub
         run: |
@@ -51,5 +51,3 @@ jobs:
             sudo docker compose -f docker-compose.dev.yml pull
             
             sudo docker compose -f docker-compose.dev.yml up -d
-            
-            sudo docker image prune -f
