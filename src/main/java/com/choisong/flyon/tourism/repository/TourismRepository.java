@@ -35,7 +35,7 @@ public class TourismRepository {
     }
 
     /** 공공데이터 LocationBased 조회 (pageNo는 1-base) */
-    public JsonNode fetchLocationBased(double lat, double lon, int radius, int pageNo, int numOfRows) {
+    public JsonNode fetchLocationBased(double lat, double lon, int radius, int pageNo, int numOfRows, String arrange) {
 
         String encodedKey = URLEncoder.encode(apiKey.trim(), StandardCharsets.UTF_8);
 
@@ -49,11 +49,13 @@ public class TourismRepository {
                 .queryParam("radius", radius)
                 .queryParam("pageNo", pageNo)
                 .queryParam("numOfRows", numOfRows)
+                .queryParam("arrange", arrange) // (A=제목순,C=수정일순, D=생성일순, E=거리순) 대표이미지가 반드시 있는 정렬 (O=제목순, Q=수정일순, R=생성일순,S=거리순). 기본값은 S
                 .build(false)
                 .toUriString();
 
         String fullUrl = baseQs + "&serviceKey=" + encodedKey;
 
+        // 요청 URI 로깅
         log.info("[TourismAPI] Request URI (full): {}", fullUrl);
         log.debug("[TourismAPI] Request URI (masked): {}", redactServiceKey(fullUrl));
 
@@ -69,6 +71,7 @@ public class TourismRepository {
             throw new RuntimeException("Empty response from Tourism API");
         }
         if (body.startsWith("<")) {
+            // XML 에러 응답 처리
             String errMsg = findBetween(body, "<errMsg>", "</errMsg>");
             String authMsg = findBetween(body, "<returnAuthMsg>", "</returnAuthMsg>");
             String reason = findBetween(body, "<returnReasonCode>", "</returnReasonCode>");
@@ -85,6 +88,7 @@ public class TourismRepository {
         }
     }
 
+    /** serviceKey 값 마스킹 처리 */
     private static String redactServiceKey(String uri) {
         String keyName = "serviceKey=";
         int idx = uri.indexOf(keyName);
@@ -96,11 +100,13 @@ public class TourismRepository {
         return uri.substring(0, start) + mask(val) + uri.substring(end);
     }
 
+    /** 마스킹 처리 */
     private static String mask(String key) {
         if (key == null || key.length() <= 8) return "****";
         return key.substring(0, 4) + "****" + key.substring(key.length() - 4);
     }
 
+    /** XML 태그 값 추출 */
     private static String findBetween(String s, String a, String b) {
         int i = s.indexOf(a);
         if (i < 0) return null;

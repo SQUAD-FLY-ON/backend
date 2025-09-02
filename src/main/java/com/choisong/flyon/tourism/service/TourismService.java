@@ -19,16 +19,17 @@ public class TourismService {
 
     private final TourismRepository tourismRepository;
 
-    public TourismSliceResult findNearbySlice(double lat, double lon, int radius, int page, int size) {
+    public TourismSliceResult findNearbySlice(double lat, double lon, int radius, int page, int size, String arrange) {
         JsonNode root;
         try {
             int pageNo = page < 0 ? 1 : (page + 1); // 0-base → 1-base
             int numOfRows = size <= 0 ? 10 : size;
+            String arrangeParam = (arrange == null || arrange.isBlank()) ? "S" : arrange;
 
-            log.debug("Calling Tourism API: lat={}, lon={}, radius={}, pageNo={}, numOfRows={}",
-                    lat, lon, radius, pageNo, numOfRows);
+            log.debug("Calling Tourism API: lat={}, lon={}, radius={}, pageNo={}, numOfRows={}, arrange={}",
+                    lat, lon, radius, pageNo, numOfRows, arrangeParam);
 
-            root = tourismRepository.fetchLocationBased(lat, lon, radius, pageNo, numOfRows);
+            root = tourismRepository.fetchLocationBased(lat, lon, radius, pageNo, numOfRows, arrangeParam);
             log.trace("Tourism API raw response: {}", root);
         } catch (Exception e) {
             log.error("Tourism API call failed", e);
