@@ -21,15 +21,15 @@ public class TourismService {
 
     public TourismSliceResult findNearbySlice(double lat, double lon, int radius, int page, int size, String arrange) {
         JsonNode root;
+        final int reqPageNo   = page < 0 ? 1 : (page + 1); // 0-base → 1-base
+        final int reqPageSize = size <= 0 ? 10 : size;
+        final String arrangeParam = (arrange == null || arrange.isBlank()) ? "S" : arrange;
+
         try {
-            int pageNo = page < 0 ? 1 : (page + 1); // 0-base → 1-base
-            int numOfRows = size <= 0 ? 10 : size;
-            String arrangeParam = (arrange == null || arrange.isBlank()) ? "S" : arrange;
-
             log.debug("Calling Tourism API: lat={}, lon={}, radius={}, pageNo={}, numOfRows={}, arrange={}",
-                    lat, lon, radius, pageNo, numOfRows, arrangeParam);
+                    lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
 
-            root = tourismRepository.fetchLocationBased(lat, lon, radius, pageNo, numOfRows, arrangeParam);
+            root = tourismRepository.fetchLocationBased(lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
             log.trace("Tourism API raw response: {}", root);
         } catch (Exception e) {
             log.error("Tourism API call failed", e);
@@ -43,7 +43,7 @@ public class TourismService {
         try {
             JsonNode response = root.path("response");
             String resultCode = response.path("header").path("resultCode").asText();
-            String resultMsg = response.path("header").path("resultMsg").asText();
+            String resultMsg  = response.path("header").path("resultMsg").asText();
 
             if (!"0000".equals(resultCode)) {
                 log.error("Tourism API error: resultCode={}, resultMsg={}", resultCode, resultMsg);
@@ -52,16 +52,11 @@ public class TourismService {
 
             JsonNode body = response.path("body");
             int totalCount = body.path("totalCount").asInt(0);
-            int pageNo = body.path("pageNo").asInt(page + 1);
-            int numOfRows = body.path("numOfRows").asInt(size);
-
-            log.info("Tourism API parsed body: totalCount={}, pageNo={}, numOfRows={}",
-                    totalCount, pageNo, numOfRows);
 
             List<TourismResponse> items = new ArrayList<>();
-            JsonNode arr = body.path("items").path("item");
-            if (arr.isArray()) {
-                for (JsonNode n : arr) {
+            JsonNode arrNode = body.path("items").path("item");
+            if (arrNode.isArray()) {
+                for (JsonNode n : arrNode) {
                     items.add(TourismResponse.builder()
                             .title(get(n, "title"))
                             .addr1(get(n, "addr1"))
@@ -74,8 +69,12 @@ public class TourismService {
                 }
             }
 
-            boolean hasNext = (pageNo * numOfRows) < totalCount;
-            return new TourismSliceResult(items, hasNext);
+            boolean hasNext = ((long) reqPageNo * reqPageSize) < totalCount;
+
+            log.info("Tourism parsed: totalCount={}, reqPageNo={}, reqPageSize={}, returnedItems={}",
+                    totalCount, reqPageNo, reqPageSize, items.size());
+
+            return new TourismSliceResult(items, hasNext, totalCount);
 
         } catch (TourismApiException e) {
             throw e;
@@ -87,6 +86,6 @@ public class TourismService {
 
     private static String get(JsonNode node, String field) {
         JsonNode v = node.get(field);
-        return v == null || v.isNull() ? null : v.asText(null);
+        return (v == null || v.isNull()) ? null : v.asText(null);
     }
 }
