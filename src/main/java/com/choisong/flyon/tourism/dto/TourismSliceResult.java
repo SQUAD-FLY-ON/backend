@@ -4,5 +4,6 @@ import java.util.List;
 
 public record TourismSliceResult(
         List<TourismResponse> content,
-        boolean hasNext
+        boolean hasNext,
+        int totalCount
 ) {}
