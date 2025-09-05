@@ -116,4 +116,16 @@ public class Weather {
         this.weather10 = weather10;
     }
 
+    public boolean isGoodWeatherExist() {
+        return "맑음".equals(weather1) ||
+            "맑음".equals(weather2) ||
+            "맑음".equals(weather3) ||
+            "맑음".equals(weather4) ||
+            "맑음".equals(weather5) ||
+            "맑음".equals(weather6) ||
+            "맑음".equals(weather7) ||
+            "맑음".equals(weather8) ||
+            "맑음".equals(weather9) ||
+            "맑음".equals(weather10);
+    }
 }

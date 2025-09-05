@@ -5,14 +5,12 @@ services:
     depends_on:
       - mysql
       - redis
-    build:
-      context: ./
-      dockerfile: Dockerfile.dev
+    image: haechansomg/flyon:latest
     container_name: backend
     ports:
       - "8080:8080"
     networks:
-      flyon:
+      - flyon
     restart: always
     tty: true
     environment:
@@ -24,7 +22,7 @@ services:
     ports:
       - "6379:6379"
     networks:
-      flyon:
+      - flyon
     restart: always
     tty: true
 
@@ -41,7 +39,7 @@ services:
     volumes:
       - mysql_data:/var/lib/mysql
     networks:
-      flyon:
+      - flyon
 
   mongo:
     image: mongo:6.0

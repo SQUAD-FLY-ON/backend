@@ -29,6 +29,8 @@ public class FlightLog {
 
     private double averageSpeed;
 
+    private int flightAltitude;
+
     private String videoUrl;
 
     private LocalDateTime createdAt;

@@ -1,31 +1,24 @@
 # 1단계: 빌드 스테이지
 FROM gradle:8.7-jdk21 AS build
-
 ENV TZ=Asia/Seoul
 WORKDIR /app
 
-# 종속성 캐싱을 위한 단계 분리
 COPY build.gradle settings.gradle ./
 COPY gradle ./gradle
 RUN gradle dependencies
 
-# 전체 소스 복사 후 빌드
 COPY . .
 RUN gradle clean build -x test
 
-# 2단계: 런타임 스테이지 (운영용, 슬림 이미지)
+# 2단계: 런타임 스테이지
 FROM eclipse-temurin:21-jre-alpine
-
 ENV TZ=Asia/Seoul
 WORKDIR /app
 
-# 타임존 설정
 RUN apk add --no-cache tzdata && \
     ln -snf /usr/share/zoneinfo/$TZ /etc/localtime && \
     echo $TZ > /etc/timezone
 
-# 빌드된 JAR 복사
 COPY --from=build /app/build/libs/*.jar app.jar
-
-# 실행
-ENTRYPOINT ["java", "-Duser.timezone=Asia/Seoul", "-jar", "app.jar"]
+EXPOSE 8080
+ENTRYPOINT ["java","-Duser.timezone=Asia/Seoul","-jar","app.jar"]

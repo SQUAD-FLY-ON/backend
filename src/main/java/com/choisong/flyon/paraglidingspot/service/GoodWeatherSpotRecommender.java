@@ -1,13 +1,14 @@
 package com.choisong.flyon.paraglidingspot.service;
 
-import com.choisong.flyon.paraglidingspot.controller.ParaglidingSpotController;
 import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
-import com.choisong.flyon.paraglidingspot.dto.RecommendCriteria;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
+import com.choisong.flyon.weather.domain.Weather;
+import com.choisong.flyon.weather.repository.WeatherRepository;
+import java.util.ArrayList;
+import java.util.HashSet;
 import java.util.List;
+import java.util.Set;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.PageImpl;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 @Component
@@ -15,10 +16,17 @@ import org.springframework.stereotype.Component;
 public class GoodWeatherSpotRecommender implements SpotRecommender {
 
     private final ParaglidingSpotRepository paraglidingSpotRepository;
+    private final WeatherRepository weatherRepository;
 
     @Override
     public List<ParaglidingSpot> getSpotsByCurrentLocation(final double latitude, final double longitude) {
-        return List.of();
+        List<Weather> weathers = weatherRepository.findAll();
+        List<Weather> goodWeather = weathers.stream().filter(Weather::isGoodWeatherExist)
+            .toList();
+        List<ParaglidingSpot> goodWeatherSpot = new ArrayList<>();
+        goodWeather.forEach(w -> goodWeatherSpot.addAll(paraglidingSpotRepository.findByAddress(w.getSido(),
+            w.getSigungu())));
+        return goodWeatherSpot;
     }
 }
 

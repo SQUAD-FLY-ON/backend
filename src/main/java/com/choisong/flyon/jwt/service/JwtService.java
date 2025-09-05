@@ -2,10 +2,8 @@ package com.choisong.flyon.jwt.service;
 
 import com.choisong.flyon.jwt.domain.RefreshToken;
 import com.choisong.flyon.jwt.dto.MemberTokens;
-import com.choisong.flyon.security.exception.TokenNotFoundException;
 import com.choisong.flyon.jwt.repository.RefreshTokenRepository;
-import jakarta.servlet.http.Cookie;
-import java.util.Optional;
+import com.choisong.flyon.security.exception.TokenNotFoundException;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
@@ -39,10 +37,7 @@ public class JwtService {
         return new MemberTokens(accessToken, refreshToken);
     }
 
-    public void logout(final Optional<Cookie> cookie) {
-        final Cookie tokenCookie = cookie.orElseThrow(
-            TokenNotFoundException::refreshTokenCookieNotFound);
-        final String refreshToken = tokenCookie.getValue();
+    public void logout(final String refreshToken) {
         refreshTokenRepository.deleteById(refreshToken);
     }
 }

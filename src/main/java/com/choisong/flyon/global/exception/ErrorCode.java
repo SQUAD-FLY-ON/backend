@@ -48,7 +48,13 @@ public enum ErrorCode {
     /**
      * Paragliding Spot Erorr 400~499
      */
-    SPOT_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "체험장을 찾을 수 없습니다");
+    SPOT_NOT_FOUND(HttpStatus.NOT_FOUND, "400", "체험장을 찾을 수 없습니다"),
+
+    /**
+     * External API 900~999
+     */
+    TOURISM_API_BAD_RESPONSE(HttpStatus.BAD_GATEWAY, "900", "관광정보 API 응답이 올바르지 않습니다."),
+    TOURISM_API_ERROR(HttpStatus.BAD_GATEWAY, "901", "관광정보 API 호출 중 오류가 발생했습니다.");
 
     private final HttpStatus httpStatus;
     private final String code;
