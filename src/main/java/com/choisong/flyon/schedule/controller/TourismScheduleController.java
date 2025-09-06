@@ -25,7 +25,7 @@ public class TourismScheduleController {
 
     private final TourismScheduleService tourismScheduleService;
 
-    @GetMapping("/gpt")
+    @PostMapping("/gpt")
     @Operation(summary = "GPT 여행 계획 수립", description = "GPT 4-o 를 사용해 수립한 여행 계획을 반환합니다.")
     public ScheduleRecommendResponse getTourismScheduleByGpt(@RequestBody ScheduleRecommendRequest request) {
         return tourismScheduleService.createGptSchedule(request);
