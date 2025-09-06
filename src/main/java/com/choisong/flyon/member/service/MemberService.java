@@ -1,6 +1,7 @@
 package com.choisong.flyon.member.service;
 
 
+import com.choisong.flyon.jwt.repository.RefreshTokenRepository;
 import com.choisong.flyon.member.domain.Member;
 import com.choisong.flyon.member.domain.MemberRole;
 import com.choisong.flyon.member.domain.Roles;
@@ -27,6 +28,8 @@ public class MemberService {
     private final MemberMapper memberMapper;
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
+    private final RefreshTokenRepository refreshTokenRepository;
+
 
     @Transactional
     public Long updateOrSaveOauthMember(final OauthMember oauthMember) {
@@ -86,5 +89,11 @@ public class MemberService {
     public Member getMemberById(final Long memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::notFound);
+    }
+
+    @Transactional
+    public void deleteMember(final Long memberId) {
+        memberRepository.deleteById(memberId);
+        refreshTokenRepository.deleteByMemberId(String.valueOf(memberId));
     }
 }
