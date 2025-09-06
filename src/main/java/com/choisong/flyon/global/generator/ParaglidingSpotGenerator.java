@@ -30,10 +30,8 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
     private final WeatherRepository weatherRepository;
     private final WeatherScheduler weatherScheduler;
 
-//    private final GptService gptService;
     @Override
     public void run(final String... args) throws Exception {
-//        gptService.summarize("hihi how are you gpt??");
         if (repository.count() > 0) {
             return;
         }

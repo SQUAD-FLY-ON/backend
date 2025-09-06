@@ -1,5 +1,6 @@
 package com.choisong.flyon.tourism.service;
 
+import com.choisong.flyon.schedule.dto.TourismType;
 import com.choisong.flyon.tourism.dto.TourismResponse;
 import com.choisong.flyon.tourism.dto.TourismSliceResult;
 import com.choisong.flyon.tourism.exception.TourismApiException;
@@ -58,13 +59,14 @@ public class TourismService {
             if (arrNode.isArray()) {
                 for (JsonNode n : arrNode) {
                     items.add(TourismResponse.builder()
-                            .title(get(n, "title"))
-                            .addr1(get(n, "addr1"))
-                            .addr2(get(n, "addr2"))
-                            .mapX(get(n, "mapx"))
-                            .mapY(get(n, "mapy"))
-                            .tel(get(n, "tel"))
-                            .firstImage(get(n, "firstimage"))
+                            .id(null)
+                            .name(get(n, "title"))
+                            .tourismType(TourismType.ATTRACTION_SPOT)
+                            .fullAddress(get(n, "addr1"))
+                            .longitude(get(n, "mapx"))
+                            .latitude(get(n, "mapy"))
+                            .phoneNumber(get(n, "tel"))
+                            .imgUrl(get(n, "firstimage"))
                             .build());
                 }
             }

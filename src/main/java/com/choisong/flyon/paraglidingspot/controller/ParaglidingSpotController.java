@@ -14,6 +14,7 @@ import org.springframework.web.bind.annotation.ModelAttribute;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
@@ -26,14 +27,15 @@ public class ParaglidingSpotController {
 
     @GetMapping("/recommend")
     @Operation(summary = "체험장 추천[기준 : 거리/날씨]", description = "위도/경도와 거리/날씨 기준을 이용해 체험장 정보를 반환합니다.")
-    public ParaglidingSpotRecommendResponse recommendSpots(@RequestBody ParaglidingSpotRecommendRequest request) {
+    public ParaglidingSpotRecommendResponse recommendSpots(@ModelAttribute ParaglidingSpotRecommendRequest request) {
         return paraglidingSpotService.recommendSpot(request);
     }
 
     @GetMapping
-    @Operation(summary = "체험장 탐색[지도]", description = "지도의 중심좌표와 모서리 좌표(방향 무관)를 이용해 체험장을 조회합니다. 체험장 상세 정보까지 함께 반환합니다.")
-    public SearchedSpotResponse searchSpots(@ModelAttribute SearchBoxRequest request) {
-        return paraglidingSpotService.searchSpots(request);
+    @Operation(summary = "체험장 탐색", description = "광역시와 도 단위의 문자열로 체험장을 검색합니다. 가능한 지역 (경기도,강원도,경상남도,경상북도,광주광역시,울산광역시,"
+        + "대구광역시,대전광역시,부산광역시,제주특별자치도,충청남도,충청북도)")
+    public SearchedSpotResponse searchSpots(@RequestParam String sido) {
+        return paraglidingSpotService.searchSpots(sido);
     }
 
     @GetMapping("/{spotId}")

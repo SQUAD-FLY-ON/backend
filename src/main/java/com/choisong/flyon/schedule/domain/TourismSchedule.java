@@ -1,6 +1,8 @@
 package com.choisong.flyon.schedule.domain;
 
+import com.choisong.flyon.schedule.dto.TourismType;
 import jakarta.persistence.Id;
+import java.time.LocalDate;
 import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
@@ -18,20 +20,17 @@ public class TourismSchedule {
     private String id;
 
     private Long memberId;
-    private Long paraglidingSpotId;
-    private LocalDateTime scheduleStart;
-    private LocalDateTime scheduleEnd;
 
+    private LocalDate scheduleStart;
+    private LocalDate scheduleEnd;
     private List<List<TourismSpot>> dailyTourismSpots ;
-
     @Builder
-    public TourismSchedule(final Long memberId, final LocalDateTime scheduleStart, final LocalDateTime scheduleEnd,
-        final List<List<TourismSpot>> dailyTourismSpots, final Long paraglidingSpotId) {
+    public TourismSchedule(final Long memberId, final LocalDate scheduleStart, final LocalDate scheduleEnd,
+        final List<List<TourismSpot>> dailyTourismSpots) {
         this.memberId = memberId;
         this.scheduleStart = scheduleStart;
         this.scheduleEnd = scheduleEnd;
         this.dailyTourismSpots = dailyTourismSpots;
-        this.paraglidingSpotId = paraglidingSpotId;
     }
 
     @Getter
@@ -39,12 +38,13 @@ public class TourismSchedule {
     @AllArgsConstructor
     @Builder
     public static class TourismSpot {
-        private String title;
-        private String addr1;
-        private String addr2;
-        private String mapX;
-        private String mapY;
-        private String tel;
-        private String firstImage;
+        private Long id;
+        private TourismType tourismType;
+        private String name;
+        private String fullAddress;
+        private double longitude;
+        private double latitude;
+        private String phoneNumber;
+        private String imgUrl;
     }
 }

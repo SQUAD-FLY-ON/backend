@@ -6,6 +6,7 @@ import com.choisong.flyon.paraglidingspot.dto.ParaglidingSpotRecommendResponse;
 import com.choisong.flyon.paraglidingspot.dto.RecommendSpot;
 import com.choisong.flyon.paraglidingspot.dto.SearchBoxRequest;
 import com.choisong.flyon.paraglidingspot.dto.SearchedSpotResponse;
+import com.choisong.flyon.paraglidingspot.dto.SearchedSpotResponse.SearchedSpot;
 import com.choisong.flyon.paraglidingspot.dto.SpotResponse;
 import com.choisong.flyon.paraglidingspot.exception.SpotNotFoundException;
 import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
@@ -43,12 +44,10 @@ public class ParaglidingSpotService {
             .orElseThrow(SpotNotFoundException::notFound);
     }
 
-    public SearchedSpotResponse searchSpots(final SearchBoxRequest request) {
-        GeometryFactory geometryFactory = new GeometryFactory(new PrecisionModel(), 4326);
-        Point center = geometryFactory.createPoint(new Coordinate(request.centerLongitude(), request.centerLatitude()));
-        int radius = DistanceCalculator.haversineDistanceMeters(request);
-        return new SearchedSpotResponse(paraglidingSpotRepository.findByCenterAndRadius(center, radius)
-            .stream().map(paraglidingSpotMapper::toSearchedSpotResponse).toList());
+    public SearchedSpotResponse searchSpots(final String sido) {
+        List<SearchedSpot> searchedSpots = paraglidingSpotRepository.findByAddressSido(sido).stream()
+            .map(paraglidingSpotMapper::toSearchedSpotResponse).toList();
+        return new SearchedSpotResponse(searchedSpots);
     }
 }
 
