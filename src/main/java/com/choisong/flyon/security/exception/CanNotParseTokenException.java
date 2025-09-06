@@ -9,7 +9,7 @@ public class CanNotParseTokenException extends SecurityException {
         super(errorCode);
     }
 
-    public static CanNotParseTokenException canNotParse(){
+    public static CanNotParseTokenException canNotParse() {
         return new CanNotParseTokenException(ErrorCode.CAN_NOT_PARSE_TOKEN);
     }
 }

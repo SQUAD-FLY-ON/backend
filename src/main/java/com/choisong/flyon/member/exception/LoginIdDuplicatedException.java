@@ -9,7 +9,7 @@ public class LoginIdDuplicatedException extends ValidationException {
         super(errorCode);
     }
 
-    public static LoginIdDuplicatedException duplicated(){
+    public static LoginIdDuplicatedException duplicated() {
         return new LoginIdDuplicatedException(ErrorCode.LOGIN_ID_DUPLICATED);
     }
 }

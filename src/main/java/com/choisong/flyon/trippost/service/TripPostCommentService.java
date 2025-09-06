@@ -10,11 +10,10 @@ import com.choisong.flyon.trippost.exception.TripPostNotFoundException;
 import com.choisong.flyon.trippost.mapper.TripPostCommentMapper;
 import com.choisong.flyon.trippost.repository.TripPostCommentRepository;
 import com.choisong.flyon.trippost.repository.TripPostRepository;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -28,7 +27,7 @@ public class TripPostCommentService {
 
     public TripPostCommentResponse create(Long postId, TripPostCommentRequest request, Long memberId) {
         TripPost post = postRepo.findById(postId)
-                .orElseThrow(TripPostNotFoundException::tripNotFound);
+            .orElseThrow(TripPostNotFoundException::tripNotFound);
         var member = memberService.getMemberById(memberId);
         TripPostComment entity = mapper.toEntity(request, post, member);
         return mapper.toResponse(commentRepo.save(entity));
@@ -37,13 +36,13 @@ public class TripPostCommentService {
     @Transactional(readOnly = true)
     public List<TripPostCommentResponse> getByPostId(Long postId) {
         return commentRepo.findByTripPostId(postId).stream()
-                .map(mapper::toResponse)
-                .toList();
+            .map(mapper::toResponse)
+            .toList();
     }
 
     public TripPostCommentResponse update(Long commentId, TripPostCommentRequest request, Long memberId) {
         TripPostComment comment = commentRepo.findById(commentId)
-                .orElseThrow(TripPostCommentNotFoundException::notFound);
+            .orElseThrow(TripPostCommentNotFoundException::notFound);
         comment.validateOwner(memberId);
         comment.update(request.content());
         return mapper.toResponse(comment);
@@ -51,7 +50,7 @@ public class TripPostCommentService {
 
     public void delete(Long commentId, Long memberId) {
         TripPostComment comment = commentRepo.findById(commentId)
-                .orElseThrow(TripPostCommentNotFoundException::notFound);
+            .orElseThrow(TripPostCommentNotFoundException::notFound);
         comment.validateOwner(memberId);
         commentRepo.delete(comment);
     }

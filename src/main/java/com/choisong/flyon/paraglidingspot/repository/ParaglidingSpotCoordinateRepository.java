@@ -1,9 +1,7 @@
 package com.choisong.flyon.paraglidingspot.repository;
 
-import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
 import java.util.List;
-import java.util.stream.Collectors;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
@@ -40,7 +38,8 @@ public class ParaglidingSpotCoordinateRepository {
         redisTemplate.opsForZSet().remove(PARAGLIDING_SPOT_KEY, paraglidingSpotId.toString());
     }
 
-    public List<Long> findNearestSpotsWithRadiusLimit(double latitude, double longitude, double maxDistanceKm, int limit) {
+    public List<Long> findNearestSpotsWithRadiusLimit(double latitude, double longitude, double maxDistanceKm,
+        int limit) {
         final Point center = new Point(longitude, latitude);
         final GeoResults<GeoLocation<Object>> results = getResults(maxDistanceKm, limit, center);
 
@@ -53,7 +52,8 @@ public class ParaglidingSpotCoordinateRepository {
             .toList();
     }
 
-    private GeoResults<GeoLocation<Object>> getResults(final double maxDistanceKm, final int limit, final Point center) {
+    private GeoResults<GeoLocation<Object>> getResults(final double maxDistanceKm, final int limit,
+        final Point center) {
         return redisTemplate.opsForGeo().search(
             PARAGLIDING_SPOT_KEY,
             GeoReference.fromCoordinate(center),
@@ -69,6 +69,7 @@ public class ParaglidingSpotCoordinateRepository {
     @AllArgsConstructor
     @NoArgsConstructor
     public static class ParaglidingSpotLocation {
+
         private String paraglidingSpotId;
         private double longitude;
         private double latitude;

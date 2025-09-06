@@ -8,6 +8,6 @@ import org.mapstruct.Mapping;
 @Mapper(componentModel = "spring")
 public interface AuthMapper {
 
-    @Mapping(source="id", target="memberId")
+    @Mapping(source = "id", target = "memberId")
     MemberInfo from(Member member);
 }

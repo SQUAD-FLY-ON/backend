@@ -9,7 +9,7 @@ public class SpotNotFoundException extends BusinessException {
         super(errorCode);
     }
 
-    public static SpotNotFoundException notFound(){
+    public static SpotNotFoundException notFound() {
         return new SpotNotFoundException(ErrorCode.SPOT_NOT_FOUND);
     }
 }

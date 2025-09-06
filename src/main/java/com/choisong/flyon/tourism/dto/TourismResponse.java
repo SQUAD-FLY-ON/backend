@@ -5,12 +5,14 @@ import lombok.Builder;
 
 @Builder
 public record TourismResponse(
-        Long id,
-        TourismType tourismType,
-        String name,
-        String fullAddress,
-        String longitude,
-        String latitude,
-        String phoneNumber,
-        String imgUrl
-) {}
+    Long id,
+    TourismType tourismType,
+    String name,
+    String fullAddress,
+    String longitude,
+    String latitude,
+    String phoneNumber,
+    String imgUrl
+) {
+
+}

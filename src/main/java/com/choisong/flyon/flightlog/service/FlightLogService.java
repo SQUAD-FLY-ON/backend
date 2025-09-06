@@ -35,9 +35,9 @@ public class FlightLogService {
 
         if (request.points() != null && !request.points().isEmpty()) {
             flightTrackService.upsert(
-                    saved.getId(),
-                    memberId,
-                    new FlightTrackUpsertRequest(request.points())
+                saved.getId(),
+                memberId,
+                new FlightTrackUpsertRequest(request.points())
             );
         }
         return flightLogMapper.toResponse(saved, request.points());
@@ -46,16 +46,18 @@ public class FlightLogService {
     public Slice<FlightLogResponse> getMyFlightLogs(Long memberId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return flightLogRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable)
-                .map(flightLog -> {
-                    var trackPoints = flightTrackService.getPoints(flightLog.getId(), memberId);
-                    return flightLogMapper.toResponse(flightLog, trackPoints);
-                });
+            .map(flightLog -> {
+                var trackPoints = flightTrackService.getPoints(flightLog.getId(), memberId);
+                return flightLogMapper.toResponse(flightLog, trackPoints);
+            });
     }
 
     public void delete(String id, Long memberId) {
         var flightLog = flightLogRepository.findById(id)
-                .orElseThrow(FlightLogNotFoundException::notFound);
-        if (!flightLog.getMemberId().equals(memberId)) throw FlightLogAccessDeniedException.accessDenied();
+            .orElseThrow(FlightLogNotFoundException::notFound);
+        if (!flightLog.getMemberId().equals(memberId)) {
+            throw FlightLogAccessDeniedException.accessDenied();
+        }
         flightLogRepository.deleteById(id);
     }
 }

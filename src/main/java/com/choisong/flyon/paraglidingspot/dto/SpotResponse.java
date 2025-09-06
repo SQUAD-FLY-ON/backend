@@ -7,6 +7,6 @@ public record SpotResponse(
     String imgUrl,
     String phoneNumber,
     String websiteUrl
-){
+) {
 
 }

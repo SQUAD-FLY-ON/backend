@@ -38,7 +38,7 @@ public class JwtValidator {
     }
 
     private void checkRoleExist(final List<Roles> roles) {
-        if(roles.isEmpty()){
+        if (roles.isEmpty()) {
             throw RoleNotFoundException.notFound();
         }
     }

@@ -3,7 +3,6 @@ package com.choisong.flyon.global.swagger;
 import com.choisong.flyon.global.advice.GlobalExceptionHandler.ErrorResponse;
 import com.choisong.flyon.global.advice.GlobalResponseBodyAdvice.SuccessResponse;
 import com.choisong.flyon.global.exception.ErrorCode;
-import io.swagger.v3.core.converter.ModelConverters;
 import io.swagger.v3.oas.annotations.OpenAPIDefinition;
 import io.swagger.v3.oas.annotations.info.Info;
 import io.swagger.v3.oas.models.Components;
@@ -32,11 +31,11 @@ import org.springframework.web.method.HandlerMethod;
 
 @Configuration
 @OpenAPIDefinition(
-        info =
-                @Info(
-                        title = "Fly:On API Docs",
-                        description = "2025 한국관광공사x카카오 관광데이터 공모전",
-                        version = "v1"))
+    info =
+    @Info(
+        title = "Fly:On API Docs",
+        description = "2025 한국관광공사x카카오 관광데이터 공모전",
+        version = "v1"))
 public class SwaggerConfig {
 
     private static final String[] statusCode = {"200", "201", "204", "301", "302"};

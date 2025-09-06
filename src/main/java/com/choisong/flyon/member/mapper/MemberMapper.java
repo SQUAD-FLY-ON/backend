@@ -12,7 +12,7 @@ public interface MemberMapper {
 
     Member toEntity(OauthMember oauth2Member);
 
-    Member toEntity(MemberRegisterRequest memberRegisterRequest,String encodedPassword);
+    Member toEntity(MemberRegisterRequest memberRegisterRequest, String encodedPassword);
 
     @Mapping(target = "gliderBadge", expression = "java(member.getGliderBadge().getDisplayName())")
     @Mapping(target = "badgeAltitude", expression = "java(member.getGliderBadge().getHeight())")

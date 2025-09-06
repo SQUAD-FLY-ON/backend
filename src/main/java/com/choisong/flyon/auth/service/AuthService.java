@@ -4,7 +4,6 @@ import com.choisong.flyon.auth.dto.LoginRequest;
 import com.choisong.flyon.auth.dto.MemberInfo;
 import com.choisong.flyon.auth.exception.PasswordNotMatchedException;
 import com.choisong.flyon.auth.mapper.AuthMapper;
-import com.choisong.flyon.jwt.dto.MemberTokens;
 import com.choisong.flyon.jwt.service.JwtService;
 import com.choisong.flyon.member.domain.Member;
 import com.choisong.flyon.member.service.MemberService;
@@ -23,14 +22,14 @@ public class AuthService {
     private final AuthMapper authMapper;
     private final JwtService jwtService;
 
-    public MemberInfo serviceLogin(final LoginRequest request){
+    public MemberInfo serviceLogin(final LoginRequest request) {
         Member member = memberService.getMemberByLoginId(request.loginId());
-        validatePassword(member,request.password());
+        validatePassword(member, request.password());
         return authMapper.from(member);
     }
 
-    private void validatePassword(final Member member,final String rawPassword) {
-        if(!passwordEncoder.matches(rawPassword,member.getEncodedPassword())){
+    private void validatePassword(final Member member, final String rawPassword) {
+        if (!passwordEncoder.matches(rawPassword, member.getEncodedPassword())) {
             throw PasswordNotMatchedException.notMatched();
         }
     }

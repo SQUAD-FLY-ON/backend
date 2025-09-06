@@ -37,7 +37,7 @@ public class GlobalResponseBodyAdvice implements ResponseBodyAdvice<Object> {
         if (body instanceof ErrorResponse) {
             return body;
         }
-        if(body instanceof String){
+        if (body instanceof String) {
             return body;
         }
         HttpServletResponse servletResponse =

@@ -1,7 +1,6 @@
 package com.choisong.flyon.paraglidingspot.service;
 
 import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
-import java.util.Collection;
 import java.util.List;
 
 public interface SpotRecommender {

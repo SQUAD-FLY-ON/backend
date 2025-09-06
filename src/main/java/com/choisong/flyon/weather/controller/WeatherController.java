@@ -19,12 +19,12 @@ public class WeatherController {
     private final WeatherService weatherService;
 
     @GetMapping
-    @Operation(summary = "지역별 1-10일간 날씨 정보",description = "시/도 문자열을 입력받아 군/구 단위로 날씨를 반환합니다.")
+    @Operation(summary = "지역별 1-10일간 날씨 정보", description = "시/도 문자열을 입력받아 군/구 단위로 날씨를 반환합니다.")
     public SidoWeahterResponse getVilageForecast(
         @RequestParam String sido,
         @RequestParam String tripStart,
         @RequestParam String tripEnd
-    ){
-        return weatherService.getSidoWeatherResponse(sido,tripStart,tripEnd);
+    ) {
+        return weatherService.getSidoWeatherResponse(sido, tripStart, tripEnd);
     }
 }

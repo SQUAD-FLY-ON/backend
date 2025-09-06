@@ -9,7 +9,7 @@ public class PasswordNotMatchedException extends ValidationException {
         super(errorCode);
     }
 
-    public static PasswordNotMatchedException notMatched(){
+    public static PasswordNotMatchedException notMatched() {
         return new PasswordNotMatchedException(ErrorCode.PASSWORD_NOT_MATCHED);
     }
 }

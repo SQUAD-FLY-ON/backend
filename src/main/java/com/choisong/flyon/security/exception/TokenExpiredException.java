@@ -9,7 +9,7 @@ public class TokenExpiredException extends SecurityException {
         super(errorCode);
     }
 
-    public static TokenExpiredException accessTokenExpired(){
+    public static TokenExpiredException accessTokenExpired() {
         return new TokenExpiredException(ErrorCode.ACCESSTOKEN_EXPIRED);
     }
 }

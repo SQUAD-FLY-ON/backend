@@ -1,13 +1,10 @@
 package com.choisong.flyon.paraglidingspot.service;
 
-import com.choisong.flyon.paraglidingspot.controller.ParaglidingSpotController;
 import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
-import com.choisong.flyon.paraglidingspot.dto.RecommendCriteria;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotCoordinateRepository;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.springframework.data.domain.Slice;
 import org.springframework.stereotype.Component;
 
 @Component

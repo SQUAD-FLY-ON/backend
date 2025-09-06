@@ -3,6 +3,7 @@ package com.choisong.flyon.weather.dto;
 public record MidLandForecastResponse(
     WeatherApiResponse<MidLandForecastItem> response
 ) {
+
     public record MidLandForecastItem(
         String regId,
         String rnSt4Am,
@@ -27,5 +28,7 @@ public record MidLandForecastResponse(
         String wf8,
         String wf9,
         String wf10
-    ) {}
+    ) {
+
+    }
 }

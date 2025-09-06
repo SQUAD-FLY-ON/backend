@@ -6,12 +6,11 @@ import com.choisong.flyon.tourism.dto.TourismSliceResult;
 import com.choisong.flyon.tourism.exception.TourismApiException;
 import com.choisong.flyon.tourism.repository.TourismRepository;
 import com.fasterxml.jackson.databind.JsonNode;
+import java.util.ArrayList;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
-
-import java.util.ArrayList;
-import java.util.List;
 
 @Service
 @RequiredArgsConstructor
@@ -20,15 +19,20 @@ public class TourismService {
 
     private final TourismRepository tourismRepository;
 
+    private static String get(JsonNode node, String field) {
+        JsonNode v = node.get(field);
+        return (v == null || v.isNull()) ? null : v.asText(null);
+    }
+
     public TourismSliceResult findNearbySlice(double lat, double lon, int radius, int page, int size, String arrange) {
         JsonNode root;
-        final int reqPageNo   = page < 0 ? 1 : (page + 1); // 0-base → 1-base
+        final int reqPageNo = page < 0 ? 1 : (page + 1); // 0-base → 1-base
         final int reqPageSize = size <= 0 ? 10 : size;
         final String arrangeParam = (arrange == null || arrange.isBlank()) ? "S" : arrange;
 
         try {
             log.debug("Calling Tourism API: lat={}, lon={}, radius={}, pageNo={}, numOfRows={}, arrange={}",
-                    lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
+                lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
 
             root = tourismRepository.fetchLocationBased(lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
             log.trace("Tourism API raw response: {}", root);
@@ -44,7 +48,7 @@ public class TourismService {
         try {
             JsonNode response = root.path("response");
             String resultCode = response.path("header").path("resultCode").asText();
-            String resultMsg  = response.path("header").path("resultMsg").asText();
+            String resultMsg = response.path("header").path("resultMsg").asText();
 
             if (!"0000".equals(resultCode)) {
                 log.error("Tourism API error: resultCode={}, resultMsg={}", resultCode, resultMsg);
@@ -59,22 +63,22 @@ public class TourismService {
             if (arrNode.isArray()) {
                 for (JsonNode n : arrNode) {
                     items.add(TourismResponse.builder()
-                            .id(null)
-                            .name(get(n, "title"))
-                            .tourismType(TourismType.ATTRACTION_SPOT)
-                            .fullAddress(get(n, "addr1"))
-                            .longitude(get(n, "mapx"))
-                            .latitude(get(n, "mapy"))
-                            .phoneNumber(get(n, "tel"))
-                            .imgUrl(get(n, "firstimage"))
-                            .build());
+                        .id(null)
+                        .name(get(n, "title"))
+                        .tourismType(TourismType.ATTRACTION_SPOT)
+                        .fullAddress(get(n, "addr1"))
+                        .longitude(get(n, "mapx"))
+                        .latitude(get(n, "mapy"))
+                        .phoneNumber(get(n, "tel"))
+                        .imgUrl(get(n, "firstimage"))
+                        .build());
                 }
             }
 
             boolean hasNext = ((long) reqPageNo * reqPageSize) < totalCount;
 
             log.info("Tourism parsed: totalCount={}, reqPageNo={}, reqPageSize={}, returnedItems={}",
-                    totalCount, reqPageNo, reqPageSize, items.size());
+                totalCount, reqPageNo, reqPageSize, items.size());
 
             return new TourismSliceResult(items, hasNext, totalCount);
 
@@ -84,10 +88,5 @@ public class TourismService {
             log.error("Failed to parse Tourism API response: {}", root, e);
             throw TourismApiException.badResponse();
         }
-    }
-
-    private static String get(JsonNode node, String field) {
-        JsonNode v = node.get(field);
-        return (v == null || v.isNull()) ? null : v.asText(null);
     }
 }

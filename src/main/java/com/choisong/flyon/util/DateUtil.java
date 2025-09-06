@@ -2,7 +2,6 @@ package com.choisong.flyon.util;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.time.LocalTime;
 import java.time.ZoneId;
 import java.time.format.DateTimeFormatter;
 import java.time.temporal.ChronoUnit;
@@ -15,7 +14,7 @@ public class DateUtil {
 
 
     public static String getCurrentBaseDateHour() {
-        return LocalDateTime.now(SEOUL).format(BASE_HH_FMT)+"0600";
+        return LocalDateTime.now(SEOUL).format(BASE_HH_FMT) + "0600";
     }
 
     public static long daysFromToday(String targetDate) {

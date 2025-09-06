@@ -23,14 +23,6 @@ public enum GliderBadge {
         this.height = height;
     }
 
-    public String getDisplayName() {
-        return name;
-    }
-
-    public int getHeight() {
-        return height;
-    }
-
     public static GliderBadge fromAltitude(int meters) {
         GliderBadge lowest = Arrays.stream(values())
             .min(Comparator.comparingInt(GliderBadge::getHeight))
@@ -40,5 +32,13 @@ public enum GliderBadge {
             .filter(b -> meters >= b.getHeight())
             .max(Comparator.comparingInt(GliderBadge::getHeight))
             .orElse(lowest);
+    }
+
+    public String getDisplayName() {
+        return name;
+    }
+
+    public int getHeight() {
+        return height;
     }
 }

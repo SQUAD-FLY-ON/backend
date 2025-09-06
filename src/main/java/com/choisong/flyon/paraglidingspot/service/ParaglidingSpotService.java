@@ -4,7 +4,6 @@ import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.dto.ParaglidingSpotRecommendRequest;
 import com.choisong.flyon.paraglidingspot.dto.ParaglidingSpotRecommendResponse;
 import com.choisong.flyon.paraglidingspot.dto.RecommendSpot;
-import com.choisong.flyon.paraglidingspot.dto.SearchBoxRequest;
 import com.choisong.flyon.paraglidingspot.dto.SearchedSpotResponse;
 import com.choisong.flyon.paraglidingspot.dto.SearchedSpotResponse.SearchedSpot;
 import com.choisong.flyon.paraglidingspot.dto.SpotResponse;
@@ -13,10 +12,6 @@ import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
-import org.locationtech.jts.geom.Coordinate;
-import org.locationtech.jts.geom.GeometryFactory;
-import org.locationtech.jts.geom.Point;
-import org.locationtech.jts.geom.PrecisionModel;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 
@@ -38,7 +33,7 @@ public class ParaglidingSpotService {
         return new ParaglidingSpotRecommendResponse(list);
     }
 
-    public SpotResponse findById(final Long id){
+    public SpotResponse findById(final Long id) {
         return paraglidingSpotRepository.findById(id)
             .map(paraglidingSpotMapper::toSpotResponse)
             .orElseThrow(SpotNotFoundException::notFound);

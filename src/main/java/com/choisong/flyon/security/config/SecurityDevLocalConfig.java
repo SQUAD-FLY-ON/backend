@@ -23,7 +23,7 @@ import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
 @RequiredArgsConstructor
 @Configuration
-@Profile({"dev","local"})
+@Profile({"dev", "local"})
 public class SecurityDevLocalConfig {
 
     private static final String AUTHORIZATION_HEADER = "Authorization";
@@ -41,7 +41,7 @@ public class SecurityDevLocalConfig {
             .authorizeHttpRequests(
                 request ->
 //                    request.requestMatchers(scanner.getPublicUrls().toArray(new String[0]))
-                    request.requestMatchers("/api/v3/api-docs/**","/api/swagger-ui/**","/**")
+                    request.requestMatchers("/api/v3/api-docs/**", "/api/swagger-ui/**", "/**")
                         .permitAll()
                         .anyRequest()
                         .authenticated())

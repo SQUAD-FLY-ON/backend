@@ -1,10 +1,9 @@
 package com.choisong.flyon.oauth.provider.kakao;
 
-import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.provider.OauthMember;
 import com.choisong.flyon.oauth.provider.OauthProviderService;
+import com.choisong.flyon.oauth.provider.OauthProviderType;
 import lombok.RequiredArgsConstructor;
-import lombok.extern.slf4j.Slf4j;
 import org.springframework.stereotype.Service;
 import org.springframework.util.LinkedMultiValueMap;
 import org.springframework.util.MultiValueMap;

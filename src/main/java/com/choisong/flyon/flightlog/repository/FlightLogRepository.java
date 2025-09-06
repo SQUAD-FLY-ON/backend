@@ -7,5 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 
 
 public interface FlightLogRepository extends MongoRepository<FlightLog, String> {
+
     Slice<FlightLog> findByMemberIdOrderByCreatedAtDesc(Long memberId, Pageable pageable);
 }

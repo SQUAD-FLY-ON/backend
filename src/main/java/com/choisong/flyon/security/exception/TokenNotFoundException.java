@@ -17,7 +17,7 @@ public class TokenNotFoundException extends SecurityException {
         return new TokenNotFoundException(ErrorCode.REFRESHTOKEN_COOKIE_NOT_FOUND);
     }
 
-    public static TokenNotFoundException accessTokenHeaderNotFound(){
+    public static TokenNotFoundException accessTokenHeaderNotFound() {
         return new TokenNotFoundException(ErrorCode.ACCESSTOKEN_HEADER_NOT_FOUND);
     }
 }

@@ -9,7 +9,7 @@ public class NicknameDuplicatedException extends ValidationException {
         super(errorCode);
     }
 
-    public static NicknameDuplicatedException duplicated(){
+    public static NicknameDuplicatedException duplicated() {
         return new NicknameDuplicatedException(ErrorCode.NICKNAME_DUPLICATED);
     }
 }

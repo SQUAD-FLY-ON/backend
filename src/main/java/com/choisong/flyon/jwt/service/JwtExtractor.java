@@ -1,6 +1,5 @@
 package com.choisong.flyon.jwt.service;
 
-import com.choisong.flyon.security.exception.TokenNotFoundException;
 import java.util.Optional;
 import org.springframework.stereotype.Component;
 import org.springframework.util.StringUtils;

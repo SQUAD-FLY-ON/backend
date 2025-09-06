@@ -12,6 +12,7 @@ import org.springframework.web.servlet.mvc.method.annotation.RequestMappingHandl
 @Component
 @Getter
 public class NoAuthRequiredAnnotationScanner {
+
     private final List<String> publicUrls = new ArrayList<>();
 
     public NoAuthRequiredAnnotationScanner(RequestMappingHandlerMapping mapping) {
@@ -22,6 +23,6 @@ public class NoAuthRequiredAnnotationScanner {
                 publicUrls.addAll(patterns);
             }
         }
-        publicUrls.addAll(List.of("/api/v3/api-docs/**","/api/swagger-ui/**"));
+        publicUrls.addAll(List.of("/api/v3/api-docs/**", "/api/swagger-ui/**"));
     }
 }

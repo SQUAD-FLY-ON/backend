@@ -25,11 +25,11 @@ public class AuthController {
     private final JwtService jwtService;
 
     @PostMapping
-    @Operation(summary = "Fly:On 로그인",description = "ID Password로 로그인합니다.")
+    @Operation(summary = "Fly:On 로그인", description = "ID Password로 로그인합니다.")
     @NoAuthRequired
-    public LoginResponse serviceLogin(@RequestBody LoginRequest request){
+    public LoginResponse serviceLogin(@RequestBody LoginRequest request) {
         MemberInfo memberInfo = authService.serviceLogin(request);
         MemberTokens memberTokens = jwtService.createAndSaveMemberTokens(memberInfo.memberId());
-        return new LoginResponse(memberInfo,memberTokens.accessToken(),memberTokens.refreshToken());
+        return new LoginResponse(memberInfo, memberTokens.accessToken(), memberTokens.refreshToken());
     }
 }

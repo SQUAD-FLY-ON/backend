@@ -2,7 +2,6 @@ package com.choisong.flyon.schedule.dto;
 
 import com.choisong.flyon.schedule.domain.TourismSchedule.TourismSpot;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 
 public record ScheduleRecommendRequest(
@@ -11,4 +10,5 @@ public record ScheduleRecommendRequest(
     LocalDate scheduleStart,
     LocalDate scheduleEnd
 ) {
+
 }

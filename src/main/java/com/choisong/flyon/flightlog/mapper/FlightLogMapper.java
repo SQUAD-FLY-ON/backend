@@ -4,10 +4,9 @@ import com.choisong.flyon.flightlog.dto.FlightLogRequest;
 import com.choisong.flyon.flightlog.dto.FlightLogResponse;
 import com.choisong.flyon.flightlog.dto.TrackPointDto;
 import com.choisong.flyon.flightlog.entity.FlightLog;
+import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
-
-import java.util.List;
 
 @Mapper(componentModel = "spring")
 public interface FlightLogMapper {

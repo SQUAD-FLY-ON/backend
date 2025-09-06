@@ -10,12 +10,14 @@ import org.springframework.stereotype.Component;
 @Component
 public class SpotRecommenderMapping {
 
-    private final EnumMap<RecommendCriteria, SpotRecommender>  recommenderMap = new EnumMap<>(RecommendCriteria.class);
+    private final EnumMap<RecommendCriteria, SpotRecommender> recommenderMap = new EnumMap<>(RecommendCriteria.class);
 
     public SpotRecommenderMapping(final ParaglidingSpotCoordinateRepository coordinateRepository,
         final ParaglidingSpotRepository spotRepository, final WeatherRepository weatherRepository) {
-        recommenderMap.put(RecommendCriteria.DISTANCE, new NearestSpotRecommender(coordinateRepository,spotRepository));
-        recommenderMap.put(RecommendCriteria.WEATHER, new GoodWeatherSpotRecommender(spotRepository,weatherRepository));
+        recommenderMap.put(RecommendCriteria.DISTANCE,
+            new NearestSpotRecommender(coordinateRepository, spotRepository));
+        recommenderMap.put(RecommendCriteria.WEATHER,
+            new GoodWeatherSpotRecommender(spotRepository, weatherRepository));
     }
 
     public SpotRecommender getRecommender(final RecommendCriteria criteria) {

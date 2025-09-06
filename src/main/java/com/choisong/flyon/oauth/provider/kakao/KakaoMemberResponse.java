@@ -1,7 +1,7 @@
 package com.choisong.flyon.oauth.provider.kakao;
 
-import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.choisong.flyon.oauth.provider.OauthMember;
+import com.choisong.flyon.oauth.provider.OauthProviderType;
 import com.fasterxml.jackson.databind.PropertyNamingStrategies;
 import com.fasterxml.jackson.databind.annotation.JsonNaming;
 

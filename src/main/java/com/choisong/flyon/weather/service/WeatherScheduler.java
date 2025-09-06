@@ -12,6 +12,12 @@ import com.choisong.flyon.weather.infrastructure.MidLandForecastClient;
 import com.choisong.flyon.weather.infrastructure.MidTemperatureClient;
 import com.choisong.flyon.weather.infrastructure.VilageForecastClient;
 import com.choisong.flyon.weather.repository.WeatherRepository;
+import java.time.LocalDate;
+import java.time.LocalTime;
+import java.time.format.DateTimeFormatter;
+import java.util.HashMap;
+import java.util.List;
+import java.util.Map;
 import lombok.RequiredArgsConstructor;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Value;
@@ -21,11 +27,6 @@ import org.springframework.retry.annotation.Retryable;
 import org.springframework.scheduling.annotation.Scheduled;
 import org.springframework.stereotype.Component;
 import org.springframework.transaction.annotation.Transactional;
-
-import java.time.LocalDate;
-import java.time.LocalTime;
-import java.time.format.DateTimeFormatter;
-import java.util.*;
 
 @Component
 @RequiredArgsConstructor
@@ -42,6 +43,41 @@ public class WeatherScheduler {
     private String apiKey;
 
     /* ===================== 기상청 호출 ===================== */
+
+    private static String normalizeMidPhrase(String src) {
+        if (src == null) {
+            return null;
+        }
+        String s = src.replaceAll("\\s+", "")
+            .replace("(", "")
+            .replace(")", "")
+            .replace(",", "");
+
+        if ("맑음".equals(s)) {
+            return "맑음";
+        }
+        if ("구름많음".equals(s)) {
+            return "구름많음";
+        }
+        if ("흐림".equals(s)) {
+            return "흐림";
+        }
+
+        if (s.contains("비/눈")) {
+            return "흐리고 비";
+        }
+        if (s.contains("소나기")) {
+            return "흐리고 비";
+        }
+        if (s.contains("비")) {
+            return "흐리고 비";
+        }
+        if (s.contains("눈")) {
+            return "흐리고 눈";
+        }
+
+        return "흐림";
+    }
 
     @Retryable(
         value = Exception.class,
@@ -65,6 +101,8 @@ public class WeatherScheduler {
         );
     }
 
+    /* ===================== Recover ===================== */
+
     @Retryable(
         value = Exception.class,
         maxAttempts = 3,
@@ -76,8 +114,6 @@ public class WeatherScheduler {
             apiKey, 1000, 1, "JSON", DateUtil.getCurrentDate(), baseTime, x, y
         );
     }
-
-    /* ===================== Recover ===================== */
 
     @Recover
     MidLandForecastResponse recoverMidLand(Exception e, String code) {
@@ -91,13 +127,13 @@ public class WeatherScheduler {
         return null;
     }
 
+    /* ===================== 스케줄러 ===================== */
+
     @Recover
     VilageForecastResponse recoverVilage(Exception e, int x, int y) {
         log.error("VilageForecast 최종 실패 (x={}, y={})", x, y, e);
         return null;
     }
-
-    /* ===================== 스케줄러 ===================== */
 
     @Scheduled(cron = "0 15 6 * * *", zone = "Asia/Seoul")
     public void scheduleMidWeather() {
@@ -138,6 +174,8 @@ public class WeatherScheduler {
         });
     }
 
+    /* ===================== 내부 로직 ===================== */
+
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void scheduleVilageWeather() {
         List<Weather> weathers = weatherRepository.findAll();
@@ -152,8 +190,6 @@ public class WeatherScheduler {
         });
     }
 
-    /* ===================== 내부 로직 ===================== */
-
     private void processVilageForecastItems(final Weather weather, final List<VilageForecastItem> items) {
         final String d1 = LocalDate.now().plusDays(1).format(DateTimeFormatter.BASIC_ISO_DATE);
         final String d2 = LocalDate.now().plusDays(2).format(DateTimeFormatter.BASIC_ISO_DATE);
@@ -167,12 +203,24 @@ public class WeatherScheduler {
             String cat = vw.category();
             String val = vw.fcstValue();
 
-            if (d1.equals(date) && "TMX".equals(cat)) weather.setTemp1Max(val);
-            if (d1.equals(date) && "TMN".equals(cat)) weather.setTemp1Min(val);
-            if (d2.equals(date) && "TMX".equals(cat)) weather.setTemp2Max(val);
-            if (d2.equals(date) && "TMN".equals(cat)) weather.setTemp2Min(val);
-            if (d3.equals(date) && "TMX".equals(cat)) weather.setTemp3Max(val);
-            if (d3.equals(date) && "TMN".equals(cat)) weather.setTemp3Min(val);
+            if (d1.equals(date) && "TMX".equals(cat)) {
+                weather.setTemp1Max(val);
+            }
+            if (d1.equals(date) && "TMN".equals(cat)) {
+                weather.setTemp1Min(val);
+            }
+            if (d2.equals(date) && "TMX".equals(cat)) {
+                weather.setTemp2Max(val);
+            }
+            if (d2.equals(date) && "TMN".equals(cat)) {
+                weather.setTemp2Min(val);
+            }
+            if (d3.equals(date) && "TMX".equals(cat)) {
+                weather.setTemp3Max(val);
+            }
+            if (d3.equals(date) && "TMN".equals(cat)) {
+                weather.setTemp3Min(val);
+            }
 
             if ("SKY".equals(cat)) {
                 daySky.put(date, val);
@@ -183,42 +231,33 @@ public class WeatherScheduler {
 
         if (daySky.containsKey(d1) || dayPty.containsKey(d1)) {
             String phrase = toSimpleWeather(daySky.get(d1), dayPty.getOrDefault(d1, "0"));
-            if (phrase != null) weather.setWeather1(phrase);
+            if (phrase != null) {
+                weather.setWeather1(phrase);
+            }
         }
         if (daySky.containsKey(d2) || dayPty.containsKey(d2)) {
             String phrase = toSimpleWeather(daySky.get(d2), dayPty.getOrDefault(d2, "0"));
-            if (phrase != null) weather.setWeather2(phrase);
+            if (phrase != null) {
+                weather.setWeather2(phrase);
+            }
         }
         if (daySky.containsKey(d3) || dayPty.containsKey(d3)) {
             String phrase = toSimpleWeather(daySky.get(d3), dayPty.getOrDefault(d3, "0"));
-            if (phrase != null) weather.setWeather3(phrase);
+            if (phrase != null) {
+                weather.setWeather3(phrase);
+            }
         }
     }
 
-    private static String normalizeMidPhrase(String src) {
-        if (src == null) return null;
-        String s = src.replaceAll("\\s+", "")
-            .replace("(", "")
-            .replace(")", "")
-            .replace(",", "");
-
-        if ("맑음".equals(s)) return "맑음";
-        if ("구름많음".equals(s)) return "구름많음";
-        if ("흐림".equals(s)) return "흐림";
-
-        if (s.contains("비/눈")) return "흐리고 비";
-        if (s.contains("소나기")) return "흐리고 비";
-        if (s.contains("비")) return "흐리고 비";
-        if (s.contains("눈")) return "흐리고 눈";
-
-        return "흐림";
-    }
-
     private String toSimpleWeather(String skyCode, String ptyCode) {
-        if (ptyCode == null) ptyCode = "0";
+        if (ptyCode == null) {
+            ptyCode = "0";
+        }
 
         if ("0".equals(ptyCode)) {
-            if (skyCode == null) return null;
+            if (skyCode == null) {
+                return null;
+            }
             return switch (skyCode) {
                 case "1" -> "맑음";
                 case "3" -> "구름많음";
@@ -235,8 +274,7 @@ public class WeatherScheduler {
     }
 
     /**
-     * 현재 시각 기준 가장 최근 발표시각 계산
-     * (발표시각: 02,05,08,11,14,17,20,23시, 발표+10분 이후만 유효)
+     * 현재 시각 기준 가장 최근 발표시각 계산 (발표시각: 02,05,08,11,14,17,20,23시, 발표+10분 이후만 유효)
      */
     private String getLatestBaseTime() {
         int[] baseHours = {2, 5, 8, 11, 14, 17, 20, 23};

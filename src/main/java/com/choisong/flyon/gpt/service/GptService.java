@@ -48,7 +48,7 @@ public class GptService {
                         "phoneNumber": "02-2088-4552",
                         "imgUrl": "",
                     },
-                    
+        
         다시 정리하자면 큰 객체 안에 배열의 배열로 반환해주면돼 바깥 배열의 인덱스는 여행 기간 중 날짜를 의미하고 (Day1,Day2), 안쪽 배열의 인덱스는 이동 경로를 의미하게하면돼.
         아래는 내가 제공할 데이터야 아래 데이터를 활용하면돼
         무조건 json객체로 반환해 너의 응답에대한 설명 필요없어 무조건 json만 반환해
@@ -65,8 +65,10 @@ public class GptService {
         %s
         """;
 
-    public ChatResponse createSchedule(final String paraglidingSpotJson,final String tourismSpotJson,final String scheduleStart,final String scheduleEnd) {
-        final Prompt prompt = new Prompt(this.promptCommand.formatted(tourismSpotJson, paraglidingSpotJson,scheduleStart,scheduleEnd),
+    public ChatResponse createSchedule(final String paraglidingSpotJson, final String tourismSpotJson,
+        final String scheduleStart, final String scheduleEnd) {
+        final Prompt prompt = new Prompt(
+            this.promptCommand.formatted(tourismSpotJson, paraglidingSpotJson, scheduleStart, scheduleEnd),
             OpenAiChatOptions.builder()
                 .model(ChatModel.GPT_4_1_NANO)
                 .responseFormat(

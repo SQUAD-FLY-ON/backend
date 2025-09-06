@@ -1,7 +1,6 @@
 package com.choisong.flyon.paraglidingspot.service;
 
 import com.choisong.flyon.paraglidingspot.dto.SearchBoxRequest;
-import org.springframework.stereotype.Component;
 
 public class DistanceCalculator {
 

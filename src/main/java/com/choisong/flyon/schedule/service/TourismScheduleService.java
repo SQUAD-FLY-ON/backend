@@ -11,7 +11,6 @@ import com.choisong.flyon.schedule.dto.ScheduleRecommendResponse;
 import com.choisong.flyon.schedule.repository.TourismScheduleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
-import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Service;

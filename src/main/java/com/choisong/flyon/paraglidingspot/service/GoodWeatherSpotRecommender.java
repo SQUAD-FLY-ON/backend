@@ -5,9 +5,7 @@ import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotRepository;
 import com.choisong.flyon.weather.domain.Weather;
 import com.choisong.flyon.weather.repository.WeatherRepository;
 import java.util.ArrayList;
-import java.util.HashSet;
 import java.util.List;
-import java.util.Set;
 import lombok.RequiredArgsConstructor;
 import org.springframework.stereotype.Component;
 

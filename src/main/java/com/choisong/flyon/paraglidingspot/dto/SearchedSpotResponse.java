@@ -5,6 +5,7 @@ import java.util.List;
 public record SearchedSpotResponse(
     List<SearchedSpot> searchedSpots
 ) {
+
     public record SearchedSpot(
         String id,
         String name,

@@ -9,7 +9,7 @@ public class RoleNotFoundException extends SecurityException {
         super(errorCode);
     }
 
-    public static RoleNotFoundException notFound(){
+    public static RoleNotFoundException notFound() {
         return new RoleNotFoundException(ErrorCode.ROLE_NOT_FOUND);
     }
 }

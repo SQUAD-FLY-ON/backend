@@ -4,7 +4,6 @@ import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;
 import jakarta.persistence.Id;
-import lombok.Builder;
 import lombok.Getter;
 import lombok.NoArgsConstructor;
 import lombok.Setter;
@@ -25,17 +24,6 @@ public class Weather {
     private String midWeatherCode;
     private int x;
     private int y;
-
-    public Weather(final String sido, final String sigungu, final String midTempCode, final String midWeatherCode,
-        final int x, final int y) {
-        this.sido = sido;
-        this.sigungu = sigungu;
-        this.midTempCode = midTempCode;
-        this.midWeatherCode = midWeatherCode;
-        this.x = x;
-        this.y = y;
-    }
-
     @Setter
     private String weather1;
     @Setter
@@ -49,7 +37,6 @@ public class Weather {
     private String weather8;
     private String weather9;
     private String weather10;
-
     @Setter
     private String temp1Max;
     @Setter
@@ -76,6 +63,15 @@ public class Weather {
     private String temp9Min;
     private String temp10Max;
     private String temp10Min;
+    public Weather(final String sido, final String sigungu, final String midTempCode, final String midWeatherCode,
+        final int x, final int y) {
+        this.sido = sido;
+        this.sigungu = sigungu;
+        this.midTempCode = midTempCode;
+        this.midWeatherCode = midWeatherCode;
+        this.x = x;
+        this.y = y;
+    }
 
     public void setMidTemp(
         String temp4Min, String temp4Max,

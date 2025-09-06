@@ -9,7 +9,7 @@ public class MemberNotFoundException extends BusinessException {
         super(errorCode);
     }
 
-    public static MemberNotFoundException notFound(){
+    public static MemberNotFoundException notFound() {
         return new MemberNotFoundException(ErrorCode.MEMBER_NOT_FOUND);
     }
 }

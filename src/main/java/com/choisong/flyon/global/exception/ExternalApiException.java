@@ -1,6 +1,5 @@
 package com.choisong.flyon.global.exception;
 
-import lombok.AccessLevel;
 import lombok.Getter;
 import lombok.RequiredArgsConstructor;
 

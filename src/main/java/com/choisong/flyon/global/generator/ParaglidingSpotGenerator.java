@@ -1,6 +1,5 @@
 package com.choisong.flyon.global.generator;
 
-import com.choisong.flyon.gpt.service.GptService;
 import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
 import com.choisong.flyon.paraglidingspot.repository.ParaglidingSpotCoordinateRepository;
@@ -30,6 +29,14 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
     private final WeatherRepository weatherRepository;
     private final WeatherScheduler weatherScheduler;
 
+    private static List<ParaglidingSpotCsv> getParaglidingSpotCsvs(final InputStreamReader reader) {
+        return new CsvToBeanBuilder<ParaglidingSpotCsv>(reader)
+            .withType(ParaglidingSpotCsv.class)
+            .withIgnoreLeadingWhiteSpace(true)
+            .build()
+            .parse();
+    }
+
     @Override
     public void run(final String... args) throws Exception {
         if (repository.count() > 0) {
@@ -48,13 +55,13 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
     }
 
     private void saveWeather(final List<ParaglidingSpotCsv> dtos) {
-        Set<String> set =  new HashSet<>();
-        List<Weather>  weathers = new ArrayList<>();
+        Set<String> set = new HashSet<>();
+        List<Weather> weathers = new ArrayList<>();
         dtos.forEach(dto -> {
             String key = dto.getSido() + dto.getSigungu();
-            if(!set.contains(key)) {
-                weathers.add(new Weather(dto.getSido(), dto.getSigungu(),dto.getMidTempCode(),dto.getMidWeatherCode()
-                    ,dto.getX().intValue(),dto.getY().intValue()));
+            if (!set.contains(key)) {
+                weathers.add(new Weather(dto.getSido(), dto.getSigungu(), dto.getMidTempCode(), dto.getMidWeatherCode()
+                    , dto.getX().intValue(), dto.getY().intValue()));
                 set.add(key);
             }
         });
@@ -63,21 +70,13 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
 
     private void saveToRedis(final List<ParaglidingSpot> entities) {
         coordinateRepository.flushAllCoordinates();
-        entities.forEach(e->coordinateRepository.addLocation(e.getSpotCoordinate().getLatitude(),
-            e.getSpotCoordinate().getLongitude(),e.getId()));
+        entities.forEach(e -> coordinateRepository.addLocation(e.getSpotCoordinate().getLatitude(),
+            e.getSpotCoordinate().getLongitude(), e.getId()));
     }
 
     private List<ParaglidingSpot> getParaglidingSpots(final List<ParaglidingSpotCsv> dtos) {
         return dtos.stream()
             .map(mapper::toEntity)
             .toList();
-    }
-
-    private static List<ParaglidingSpotCsv> getParaglidingSpotCsvs(final InputStreamReader reader) {
-        return new CsvToBeanBuilder<ParaglidingSpotCsv>(reader)
-            .withType(ParaglidingSpotCsv.class)
-            .withIgnoreLeadingWhiteSpace(true)
-            .build()
-            .parse();
     }
 }

@@ -3,7 +3,6 @@ package com.choisong.flyon.schedule.domain;
 import com.choisong.flyon.schedule.dto.TourismType;
 import jakarta.persistence.Id;
 import java.time.LocalDate;
-import java.time.LocalDateTime;
 import java.util.List;
 import lombok.AllArgsConstructor;
 import lombok.Builder;
@@ -23,7 +22,8 @@ public class TourismSchedule {
 
     private LocalDate scheduleStart;
     private LocalDate scheduleEnd;
-    private List<List<TourismSpot>> dailyTourismSpots ;
+    private List<List<TourismSpot>> dailyTourismSpots;
+
     @Builder
     public TourismSchedule(final Long memberId, final LocalDate scheduleStart, final LocalDate scheduleEnd,
         final List<List<TourismSpot>> dailyTourismSpots) {
@@ -38,6 +38,7 @@ public class TourismSchedule {
     @AllArgsConstructor
     @Builder
     public static class TourismSpot {
+
         private Long id;
         private TourismType tourismType;
         private String name;

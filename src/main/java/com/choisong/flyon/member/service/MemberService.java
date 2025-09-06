@@ -47,12 +47,12 @@ public class MemberService {
         validateLoginId(request.loginId());
         validateNickName(request.nickname());
         String encodePassword = encodePassword(request.password());
-        Member member = memberMapper.toEntity(request,encodePassword);
+        Member member = memberMapper.toEntity(request, encodePassword);
         memberRepository.save(member);
         roleRepository.save(new Roles(member.getId(), MemberRole.ROLE_MEMBER));
     }
 
-    public MemberInfoResponse findMemberInfo(final Long memberId){
+    public MemberInfoResponse findMemberInfo(final Long memberId) {
         Member member = getMemberById(memberId);
         return memberMapper.toMemberInfoResponse(member);
     }
@@ -78,12 +78,12 @@ public class MemberService {
         return memberRepository.save(newMember).getId();
     }
 
-    public Member getMemberByLoginId(final String loginId){
+    public Member getMemberByLoginId(final String loginId) {
         return memberRepository.findByLoginId(loginId)
             .orElseThrow(MemberNotFoundException::notFound);
     }
 
-    public Member getMemberById(final Long memberId){
+    public Member getMemberById(final Long memberId) {
         return memberRepository.findById(memberId)
             .orElseThrow(MemberNotFoundException::notFound);
     }

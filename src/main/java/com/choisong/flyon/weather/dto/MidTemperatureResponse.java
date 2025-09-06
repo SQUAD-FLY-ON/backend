@@ -3,6 +3,7 @@ package com.choisong.flyon.weather.dto;
 public record MidTemperatureResponse(
     WeatherApiResponse<MidTemperatureItem> response
 ) {
+
     public record MidTemperatureItem(
         String regId,
         String taMin4, String taMin4Low, String taMin4High,
@@ -19,5 +20,7 @@ public record MidTemperatureResponse(
         String taMax9, String taMax9Low, String taMax9High,
         String taMin10, String taMin10Low, String taMin10High,
         String taMax10, String taMax10Low, String taMax10High
-    ) {}
+    ) {
+
+    }
 }
