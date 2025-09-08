@@ -15,12 +15,18 @@ import java.util.ArrayList;
 import java.util.HashSet;
 import java.util.List;
 import java.util.Set;
+import java.util.concurrent.CompletableFuture;
 import lombok.RequiredArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.boot.CommandLineRunner;
+import org.springframework.retry.backoff.FixedBackOffPolicy;
+import org.springframework.retry.policy.SimpleRetryPolicy;
+import org.springframework.retry.support.RetryTemplate;
 import org.springframework.stereotype.Component;
 
 @Component
 @RequiredArgsConstructor
+@Slf4j
 public class ParaglidingSpotGenerator implements CommandLineRunner {
 
     private final ParaglidingSpotRepository repository;
@@ -44,13 +50,43 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
         }
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("data/facility.csv");
             InputStreamReader reader = new InputStreamReader(is, StandardCharsets.UTF_8)) {
+
             List<ParaglidingSpotCsv> dtos = getParaglidingSpotCsvs(reader);
             List<ParaglidingSpot> entities = getParaglidingSpots(dtos);
+
             repository.saveAll(entities);
             saveToRedis(entities);
             saveWeather(dtos);
-            weatherScheduler.scheduleMidWeather();
-            weatherScheduler.scheduleVilageWeather();
+
+            // 비동기로 날씨 스케줄러 실행
+            CompletableFuture.runAsync(() -> runWeatherSchedulersWithRetry());
+        }
+    }
+
+    /**
+     * 날씨 스케줄러를 재시도 가능하게 실행
+     */
+    private void runWeatherSchedulersWithRetry() {
+        RetryTemplate retryTemplate = new RetryTemplate();
+
+        // 5번 재시도
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5);
+        retryTemplate.setRetryPolicy(retryPolicy);
+
+        // 2초 간격 재시도
+        FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
+        backOffPolicy.setBackOffPeriod(2000L);
+        retryTemplate.setBackOffPolicy(backOffPolicy);
+
+        try {
+            retryTemplate.execute(context -> {
+                log.info("초기 WeatherScheduler 실행 시도 (재시도 {}번째)", context.getRetryCount() + 1);
+                weatherScheduler.scheduleMidWeather();
+                weatherScheduler.scheduleVilageWeather();
+                return null;
+            });
+        } catch (Exception e) {
+            log.error("초기 WeatherScheduler 실행 최종 실패", e);
         }
     }
 
@@ -60,8 +96,14 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
         dtos.forEach(dto -> {
             String key = dto.getSido() + dto.getSigungu();
             if (!set.contains(key)) {
-                weathers.add(new Weather(dto.getSido(), dto.getSigungu(), dto.getMidTempCode(), dto.getMidWeatherCode()
-                    , dto.getX().intValue(), dto.getY().intValue()));
+                weathers.add(new Weather(
+                    dto.getSido(),
+                    dto.getSigungu(),
+                    dto.getMidTempCode(),
+                    dto.getMidWeatherCode(),
+                    dto.getX().intValue(),
+                    dto.getY().intValue()
+                ));
                 set.add(key);
             }
         });
@@ -70,8 +112,11 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
 
     private void saveToRedis(final List<ParaglidingSpot> entities) {
         coordinateRepository.flushAllCoordinates();
-        entities.forEach(e -> coordinateRepository.addLocation(e.getSpotCoordinate().getLatitude(),
-            e.getSpotCoordinate().getLongitude(), e.getId()));
+        entities.forEach(e -> coordinateRepository.addLocation(
+            e.getSpotCoordinate().getLatitude(),
+            e.getSpotCoordinate().getLongitude(),
+            e.getId()
+        ));
     }
 
     private List<ParaglidingSpot> getParaglidingSpots(final List<ParaglidingSpotCsv> dtos) {

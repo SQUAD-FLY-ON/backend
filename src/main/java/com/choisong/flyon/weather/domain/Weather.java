@@ -24,31 +24,26 @@ public class Weather {
     private String midWeatherCode;
     private int x;
     private int y;
-    @Setter
-    private String weather1;
-    @Setter
-    private String weather2;
-    @Setter
-    private String weather3;
-    private String weather4;
+
+    @Setter private String weather1;  // 오늘
+    @Setter private String weather2;  // 내일
+    @Setter private String weather3;  // 모레
+
+    private String weather4;          // D+4
     private String weather5;
     private String weather6;
     private String weather7;
     private String weather8;
     private String weather9;
     private String weather10;
-    @Setter
-    private String temp1Max;
-    @Setter
-    private String temp1Min;
-    @Setter
-    private String temp2Max;
-    @Setter
-    private String temp2Min;
-    @Setter
-    private String temp3Max;
-    @Setter
-    private String temp3Min;
+
+    @Setter private String temp1Max;
+    @Setter private String temp1Min;
+    @Setter private String temp2Max;
+    @Setter private String temp2Min;
+    @Setter private String temp3Max;
+    @Setter private String temp3Min;
+
     private String temp4Max;
     private String temp4Min;
     private String temp5Max;
@@ -63,6 +58,7 @@ public class Weather {
     private String temp9Min;
     private String temp10Max;
     private String temp10Min;
+
     public Weather(final String sido, final String sigungu, final String midTempCode, final String midWeatherCode,
         final int x, final int y) {
         this.sido = sido;
