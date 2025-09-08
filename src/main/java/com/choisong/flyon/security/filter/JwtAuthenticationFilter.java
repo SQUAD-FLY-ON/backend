@@ -27,7 +27,7 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final HttpServletResponse response,
         final FilterChain filterChain)
         throws ServletException, IOException {
-        if(request.getRequestURI().equals("/api/tokens") || request.getMethod().equals("POST")) {
+        if(request.getRequestURI().equals("/api/tokens") && request.getMethod().equals("POST")) {
             filterChain.doFilter(request, response);
             return;
         }
