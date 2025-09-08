@@ -21,6 +21,7 @@ public enum ErrorCode {
     ROLE_NOT_FOUND(HttpStatus.NOT_FOUND, "007", "이 에러 메세지를 본다면 서버 개발자에게 꼭 연락해주세요."),
     ACCESSTOKEN_HEADER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "008", "요청 헤더에서 액세스토큰을 찾을 수 없습니다."),
     PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "009", "비밀번호가 일치하지 않습니다."),
+    REFRESHTOKEN_EXPIRED(HttpStatus.UNAUTHORIZED,"010","리프레쉬토큰이 만료됐습니다"),
 
     /**
      * Member Error 100~199

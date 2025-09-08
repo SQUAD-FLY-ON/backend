@@ -16,12 +16,13 @@ public class JwtService {
     private final JwtProperties jwtProperties;
     private final JwtCreator jwtCreator;
     private final RefreshTokenRepository refreshTokenRepository;
+    private final JwtValidator jwtValidator;
 
-    public MemberTokens reissue(final String refreshToken) {
+    public String reissue(final String refreshToken) {
         final RefreshToken savedRefreshToken = findByRefreshToken(refreshToken);
         final String savedMemberId = savedRefreshToken.getMemberId();
-        refreshTokenRepository.delete(savedRefreshToken);
-        return createAndSaveMemberTokens(savedMemberId);
+        jwtValidator.validateRefreshTokenAndGetClaim(refreshToken);
+        return jwtCreator.create(savedMemberId, jwtProperties.accessExpiration());
     }
 
     private RefreshToken findByRefreshToken(final String token) {

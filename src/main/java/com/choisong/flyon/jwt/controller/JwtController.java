@@ -29,8 +29,7 @@ public class JwtController {
     @Operation(summary = "액세스 토큰 재발급", description = "리프레쉬 토큰을 사용해 액세스토큰을 재발급합니다.")
     @NoAuthRequired
     public TokenResponse reissueAccessToken(@RequestBody TokenRequest request) {
-        final MemberTokens memberTokens = jwtService.reissue(request.refreshToken());
-        return new TokenResponse(memberTokens.accessToken());
+        return new TokenResponse(jwtService.reissue(request.refreshToken()));
     }
 
     @DeleteMapping

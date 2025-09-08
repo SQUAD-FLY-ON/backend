@@ -27,12 +27,12 @@ public class JwtValidator {
     private final SecretKey secretKey;
 
     public Authentication getAuthentication(final String token) {
-        final String memberId = validateAndGetClaim(token);
+        final String memberId = validateAccessTokenAndGetClaim(token);
         final List<Roles> roles =
             roleRepository.findByMemberId(Long.parseLong(memberId));
         checkRoleExist(roles);
         final MemberPrincipal memberPrincipal =
-            new MemberPrincipal(validateAndGetClaim(token), null, roles);
+            new MemberPrincipal(validateAccessTokenAndGetClaim(token), null, roles);
         return new UsernamePasswordAuthenticationToken(
             memberPrincipal, EMPTY_CREDENTIAL, getAuthorityList(roles));
     }
@@ -43,7 +43,7 @@ public class JwtValidator {
         }
     }
 
-    public String validateAndGetClaim(final String token) {
+    public String validateAccessTokenAndGetClaim(final String token) {
         try {
             return Jwts.parser()
                 .verifyWith(secretKey)
@@ -53,6 +53,21 @@ public class JwtValidator {
                 .getSubject();
         } catch (final ExpiredJwtException e) {
             throw TokenExpiredException.accessTokenExpired();
+        } catch (final JwtException e) {
+            throw CanNotParseTokenException.canNotParse();
+        }
+    }
+
+    public String validateRefreshTokenAndGetClaim(final String token) {
+        try {
+            return Jwts.parser()
+                .verifyWith(secretKey)
+                .build()
+                .parseSignedClaims(token)
+                .getPayload()
+                .getSubject();
+        } catch (final ExpiredJwtException e) {
+            throw TokenExpiredException.refreshTokenExpired();
         } catch (final JwtException e) {
             throw CanNotParseTokenException.canNotParse();
         }

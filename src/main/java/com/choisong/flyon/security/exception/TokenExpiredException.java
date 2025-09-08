@@ -12,4 +12,8 @@ public class TokenExpiredException extends SecurityException {
     public static TokenExpiredException accessTokenExpired() {
         return new TokenExpiredException(ErrorCode.ACCESSTOKEN_EXPIRED);
     }
+
+    public static TokenExpiredException refreshTokenExpired() {
+        return new TokenExpiredException(ErrorCode.REFRESHTOKEN_EXPIRED);
+    }
 }

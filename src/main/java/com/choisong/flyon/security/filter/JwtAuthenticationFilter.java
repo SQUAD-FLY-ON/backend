@@ -27,6 +27,10 @@ public class JwtAuthenticationFilter extends OncePerRequestFilter {
         final HttpServletResponse response,
         final FilterChain filterChain)
         throws ServletException, IOException {
+        if(request.getRequestURI().equals("/api/tokens") || request.getMethod().equals("POST")) {
+            filterChain.doFilter(request, response);
+            return;
+        }
         final String accessTokenWithBearer = request.getHeader(AUTHORIZATION_HEADER);
         jwtExtractor
             .extractAccessToken(accessTokenWithBearer)
