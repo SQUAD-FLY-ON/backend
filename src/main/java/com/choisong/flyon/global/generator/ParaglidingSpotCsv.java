@@ -42,6 +42,6 @@ public class ParaglidingSpotCsv {
     private Double x;
     @CsvBindByName(column = "y")
     private Double y;
-
-
+    @CsvBindByName(column = "imgUrl")
+    private String imgUrl;
 }

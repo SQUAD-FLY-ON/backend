@@ -17,7 +17,7 @@ public interface ParaglidingSpotMapper {
     @Mapping(target = "fullAddress", source = "fullAddress")
     @Mapping(target = "latitude", source = "latitude")
     @Mapping(target = "longitude", source = "longitude")
-    @Mapping(target = "imgUrl", constant = "")
+    @Mapping(target = "imgUrl", source = "imgUrl")
     ParaglidingSpot toEntity(ParaglidingSpotCsv dto);
 
     @Mapping(target = "spotName", source = "facilityName")

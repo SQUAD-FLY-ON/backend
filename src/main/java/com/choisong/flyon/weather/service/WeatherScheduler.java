@@ -135,8 +135,9 @@ public class WeatherScheduler {
         return null;
     }
 
-    @Scheduled(cron = "0 15 6 * * *", zone = "Asia/Seoul")
+    @Scheduled(cron = "0 * * * * *", zone = "Asia/Seoul")
     public void scheduleMidWeather() {
+        
         List<Weather> weathers = weatherRepository.findAll();
         weathers.forEach(weather -> {
             MidLandForecastResponse midLandRes = getMidLandForecastResponse(weather.getMidWeatherCode());
