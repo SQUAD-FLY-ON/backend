@@ -58,35 +58,49 @@ public class ParaglidingSpotGenerator implements CommandLineRunner {
             saveToRedis(entities);
             saveWeather(dtos);
 
-            // 비동기로 날씨 스케줄러 실행
-            CompletableFuture.runAsync(() -> runWeatherSchedulersWithRetry());
+            // 초기 기상 데이터 채움 (순차 실행)
+            CompletableFuture.runAsync(this::runWeatherSchedulersWithRetry);
         }
     }
 
-    /**
-     * 날씨 스케줄러를 재시도 가능하게 실행
-     */
     private void runWeatherSchedulersWithRetry() {
+        // 단기 → 중기 순으로 순차 실행
+        runWithRetry(
+            "WeatherScheduler.scheduleVilageWeather",
+            weatherScheduler::scheduleVilageWeather,
+            5,
+            2000L
+        );
+
+        runWithRetry(
+            "WeatherScheduler.scheduleMidWeather",
+            weatherScheduler::scheduleMidWeather,
+            5,
+            2000L
+        );
+    }
+
+    /** 주어진 작업을 개별 RetryTemplate로 재시도 실행 */
+    private void runWithRetry(final String name, final Runnable action, final int maxAttempts, final long backoffMs) {
         RetryTemplate retryTemplate = new RetryTemplate();
 
-        // 5번 재시도
-        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(5);
+        SimpleRetryPolicy retryPolicy = new SimpleRetryPolicy(maxAttempts);
         retryTemplate.setRetryPolicy(retryPolicy);
 
-        // 2초 간격 재시도
         FixedBackOffPolicy backOffPolicy = new FixedBackOffPolicy();
-        backOffPolicy.setBackOffPeriod(2000L);
+        backOffPolicy.setBackOffPeriod(backoffMs);
         retryTemplate.setBackOffPolicy(backOffPolicy);
 
         try {
             retryTemplate.execute(context -> {
-                log.info("초기 WeatherScheduler 실행 시도 (재시도 {}번째)", context.getRetryCount() + 1);
-                weatherScheduler.scheduleMidWeather();
-                weatherScheduler.scheduleVilageWeather();
+                int attempt = context.getRetryCount() + 1;
+                log.info("[{}] 실행 시도 ({}번째)", name, attempt);
+                action.run();
+                log.info("[{}] 실행 성공 ({}번째 시도)", name, attempt);
                 return null;
             });
         } catch (Exception e) {
-            log.error("초기 WeatherScheduler 실행 최종 실패", e);
+            log.error("[{}] 초기 실행 최종 실패 (maxAttempts={})", name, maxAttempts, e);
         }
     }
 

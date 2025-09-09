@@ -44,6 +44,7 @@ public class WeatherScheduler {
     @Value("${weather.api.key}")
     private String apiKey;
 
+    /** 중기 문구 정규화 */
     private static String normalizeMidPhrase(String src) {
         if (src == null) return null;
         String s = src.replaceAll("\\s+", "")
@@ -60,18 +61,42 @@ public class WeatherScheduler {
         return "흐림";
     }
 
+    /** ★ 06:00 전용 tmFc 계산. 06:10 이전이면 '어제 0600' */
+    private String getLatestMid0600TmFc() {
+        final int BUFFER_MINUTES = 10;
+        LocalDate today = LocalDate.now();
+        LocalTime now = LocalTime.now();
+        LocalTime cutoff = LocalTime.of(6, BUFFER_MINUTES);
+        LocalDate baseDate = now.isAfter(cutoff) ? today : today.minusDays(1);
+        String tmFc = baseDate.format(DateTimeFormatter.BASIC_ISO_DATE) + "0600";
+        log.debug("Using mid tmFc = {}", tmFc);
+        return tmFc;
+    }
+
+    /** 단기(동네예보) baseTime 계산 */
+    private String getLatestBaseTime() {
+        int[] baseHours = {2, 5, 8, 11, 14, 17, 20, 23};
+        LocalTime now = LocalTime.now();
+        String latest = "0200";
+        for (int h : baseHours) {
+            if (now.getHour() > h || (now.getHour() == h && now.getMinute() >= 10)) {
+                latest = String.format("%02d00", h);
+            }
+        }
+        return latest;
+    }
+
+    // ===== API 호출부 (재시도) =====
     @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 2000))
     MidLandForecastResponse getMidLandForecastResponse(String code) {
-        return midLandForecastClient.getMidLandForecast(
-            apiKey, 1, 1, "JSON", code, DateUtil.getCurrentBaseDateHour()
-        );
+        String tmFc = getLatestMid0600TmFc();
+        return midLandForecastClient.getMidLandForecast(apiKey, 1, 1, "JSON", code, tmFc);
     }
 
     @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 2000))
     MidTemperatureResponse getMidTemperatureResponse(String code) {
-        return midTemperatureClient.getMidTemperatureForecast(
-            apiKey, 1, 1, "JSON", code, DateUtil.getCurrentBaseDateHour()
-        );
+        String tmFc = getLatestMid0600TmFc();
+        return midTemperatureClient.getMidTemperatureForecast(apiKey, 1, 1, "JSON", code, tmFc);
     }
 
     @Retryable(value = Exception.class, maxAttempts = 5, backoff = @Backoff(delay = 2000))
@@ -82,6 +107,7 @@ public class WeatherScheduler {
         );
     }
 
+    // ===== Recover =====
     @Recover
     MidLandForecastResponse recoverMidLand(Exception e, String code) {
         log.error("MidLandForecast 최종 실패 (code={})", code, e);
@@ -100,7 +126,9 @@ public class WeatherScheduler {
         return null;
     }
 
-    @Scheduled(cron = "0 15 6,18 * * *", zone = "Asia/Seoul")
+    // ===== 스케줄 =====
+    // 중기: 오전 06:15에만 실행(운영 스케줄). 앱 어디서 호출되더라도 06:00 전용 tmFc 사용하므로 안전.
+    @Scheduled(cron = "0 15 6 * * *", zone = "Asia/Seoul")
     public void scheduleMidWeather() {
         log.info("중기 기상 요청 호출");
         List<Weather> weathers = weatherRepository.findAll();
@@ -117,12 +145,16 @@ public class WeatherScheduler {
             }
             MidLandForecastItem wi = midLandRes.response().body().items().item().get(0);
             MidTemperatureItem ti = midTempRes.response().body().items().item().get(0);
-            weather.setMidWeather(
+
+            // ★ null-무시 세터 사용 → 없는 값은 기존값 보존
+            weather.setMidWeatherNullable(
                 normalizeMidPhrase(wi.wf4Pm()), normalizeMidPhrase(wi.wf5Pm()),
                 normalizeMidPhrase(wi.wf6Pm()), normalizeMidPhrase(wi.wf7Pm()),
-                normalizeMidPhrase(wi.wf8()), normalizeMidPhrase(wi.wf9()), normalizeMidPhrase(wi.wf10())
+                normalizeMidPhrase(wi.wf8()),  normalizeMidPhrase(wi.wf9()),
+                normalizeMidPhrase(wi.wf10())
             );
-            weather.setMidTemp(
+
+            weather.setMidTempNullable(
                 ti.taMin4(), ti.taMax4(),
                 ti.taMin5(), ti.taMax5(),
                 ti.taMin6(), ti.taMax6(),
@@ -134,6 +166,7 @@ public class WeatherScheduler {
         });
     }
 
+    // 단기: 3시간 주기(관측/발표 시간대)로 실행
     @Scheduled(cron = "0 15 2,5,8,11,14,17,20,23 * * *", zone = "Asia/Seoul")
     public void scheduleVilageWeather() {
         log.info("단기 기상 호출 요청");
@@ -213,17 +246,5 @@ public class WeatherScheduler {
             case "3" -> "흐리고 눈";
             default -> null;
         };
-    }
-
-    private String getLatestBaseTime() {
-        int[] baseHours = {2, 5, 8, 11, 14, 17, 20, 23};
-        LocalTime now = LocalTime.now();
-        String latest = "0200";
-        for (int h : baseHours) {
-            if (now.getHour() > h || (now.getHour() == h && now.getMinute() >= 10)) {
-                latest = String.format("%02d00", h);
-            }
-        }
-        return latest;
     }
 }
