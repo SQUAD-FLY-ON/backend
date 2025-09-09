@@ -2,9 +2,7 @@ package com.choisong.flyon.flightlog.mapper;
 
 import com.choisong.flyon.flightlog.dto.FlightLogRequest;
 import com.choisong.flyon.flightlog.dto.FlightLogResponse;
-import com.choisong.flyon.flightlog.dto.TrackPointDto;
 import com.choisong.flyon.flightlog.entity.FlightLog;
-import java.util.List;
 import org.mapstruct.Mapper;
 import org.mapstruct.Mapping;
 
@@ -16,6 +14,5 @@ public interface FlightLogMapper {
     @Mapping(target = "createdAt", expression = "java(LocalDateTime.now())")
     FlightLog toEntity(FlightLogRequest request, Long memberId);
 
-    @Mapping(target = "track", source = "track")
-    FlightLogResponse toResponse(FlightLog flightLog, List<TrackPointDto> track);
+    FlightLogResponse toResponse(FlightLog flightLog);
 }

@@ -33,14 +33,14 @@ public class FlightLogService {
         var member = memberService.getMemberById(memberId);
         member.increaseJumpAltitude(request.flightAltitude()); // 기존 메서드명 유지
 
-        if (request.points() != null && !request.points().isEmpty()) {
-            flightTrackService.upsert(
-                saved.getId(),
-                memberId,
-                new FlightTrackUpsertRequest(request.points())
-            );
-        }
-        return flightLogMapper.toResponse(saved, request.points());
+//        if (request.points() != null && !request.points().isEmpty()) {
+//            flightTrackService.upsert(
+//                saved.getId(),
+//                memberId,
+//                new FlightTrackUpsertRequest(request.points())
+//            );
+//        }
+        return flightLogMapper.toResponse(saved);
     }
 
     public Slice<FlightLogResponse> getMyFlightLogs(Long memberId, int page, int size) {
@@ -48,7 +48,7 @@ public class FlightLogService {
         return flightLogRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable)
             .map(flightLog -> {
                 var trackPoints = flightTrackService.getPoints(flightLog.getId(), memberId);
-                return flightLogMapper.toResponse(flightLog, trackPoints);
+                return flightLogMapper.toResponse(flightLog);
             });
     }
 

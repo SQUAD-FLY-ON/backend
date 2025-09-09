@@ -7,9 +7,7 @@ public record FlightLogRequest(
     double flightTime,
     double flightDistance,
     double averageSpeed,
-    int flightAltitude,
-    String videoUrl,
-    List<TrackPointDto> points
+    int flightAltitude
 ) {
 
 }
