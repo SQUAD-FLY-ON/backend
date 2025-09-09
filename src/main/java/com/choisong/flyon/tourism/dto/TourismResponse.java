@@ -5,7 +5,7 @@ import lombok.Builder;
 
 @Builder
 public record TourismResponse(
-    Long id,
+//    Long id,
     TourismType tourismType,
     String name,
     String fullAddress,

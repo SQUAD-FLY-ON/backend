@@ -25,16 +25,20 @@ public class TourismService {
     }
 
     public TourismSliceResult findNearbySlice(double lat, double lon, int radius, int page, int size, String arrange) {
+        return findNearbySlice(lat, lon, radius, page, size, arrange, null);
+    }
+
+    public TourismSliceResult findNearbySlice(double lat, double lon, int radius, int page, int size, String arrange, Integer contentTypeId) {
         JsonNode root;
         final int reqPageNo = page < 0 ? 1 : (page + 1); // 0-base → 1-base
         final int reqPageSize = size <= 0 ? 10 : size;
         final String arrangeParam = (arrange == null || arrange.isBlank()) ? "S" : arrange;
 
         try {
-            log.debug("Calling Tourism API: lat={}, lon={}, radius={}, pageNo={}, numOfRows={}, arrange={}",
-                lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
+            log.debug("Calling Tourism API: lat={}, lon={}, radius={}, pageNo={}, numOfRows={}, arrange={}, contentTypeId={}",
+                    lat, lon, radius, reqPageNo, reqPageSize, arrangeParam, contentTypeId);
 
-            root = tourismRepository.fetchLocationBased(lat, lon, radius, reqPageNo, reqPageSize, arrangeParam);
+            root = tourismRepository.fetchLocationBased(lat, lon, radius, reqPageNo, reqPageSize, arrangeParam, contentTypeId);
             log.trace("Tourism API raw response: {}", root);
         } catch (Exception e) {
             log.error("Tourism API call failed", e);
@@ -63,22 +67,21 @@ public class TourismService {
             if (arrNode.isArray()) {
                 for (JsonNode n : arrNode) {
                     items.add(TourismResponse.builder()
-                        .id(null)
-                        .name(get(n, "title"))
-                        .tourismType(TourismType.ATTRACTION_SPOT)
-                        .fullAddress(get(n, "addr1"))
-                        .longitude(get(n, "mapx"))
-                        .latitude(get(n, "mapy"))
-                        .phoneNumber(get(n, "tel"))
-                        .imgUrl(get(n, "firstimage"))
-                        .build());
+                            .name(get(n, "title"))
+                            .tourismType(TourismType.ATTRACTION_SPOT)
+                            .fullAddress(get(n, "addr1"))
+                            .longitude(get(n, "mapx"))
+                            .latitude(get(n, "mapy"))
+                            .phoneNumber(get(n, "tel"))
+                            .imgUrl(get(n, "firstimage"))
+                            .build());
                 }
             }
 
             boolean hasNext = ((long) reqPageNo * reqPageSize) < totalCount;
 
             log.info("Tourism parsed: totalCount={}, reqPageNo={}, reqPageSize={}, returnedItems={}",
-                totalCount, reqPageNo, reqPageSize, items.size());
+                    totalCount, reqPageNo, reqPageSize, items.size());
 
             return new TourismSliceResult(items, hasNext, totalCount);
 

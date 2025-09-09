@@ -25,12 +25,12 @@ public class TourismRepository {
     private final String apiKey;
 
     public TourismRepository(Jackson2ObjectMapperBuilder mapperBuilder,
-        @Value("${tourism.api.key}") String apiKey) {
+                             @Value("${tourism.api.key}") String apiKey) {
         this.mapperBuilder = mapperBuilder;
         this.apiKey = apiKey;
         this.tourismRestClient = RestClient.builder()
-            .baseUrl(TOUR_BASE)
-            .build();
+                .baseUrl(TOUR_BASE)
+                .build();
     }
 
     /**
@@ -80,23 +80,36 @@ public class TourismRepository {
      * 공공데이터 LocationBased 조회 (pageNo는 1-base)
      */
     public JsonNode fetchLocationBased(double lat, double lon, int radius, int pageNo, int numOfRows, String arrange) {
+        return fetchLocationBased(lat, lon, radius, pageNo, numOfRows, arrange, null);
+    }
+
+    /**
+     * 공공데이터 LocationBased 조회 (pageNo는 1-base) + contentTypeId 선택적 필터
+     */
+    public JsonNode fetchLocationBased(double lat, double lon, int radius, int pageNo, int numOfRows, String arrange, Integer contentTypeId) {
 
         String encodedKey = URLEncoder.encode(apiKey.trim(), StandardCharsets.UTF_8);
 
-        String baseQs = UriComponentsBuilder
-            .fromHttpUrl(TOUR_BASE + "/locationBasedList2")
-            .queryParam("MobileOS", "WEB")
-            .queryParam("MobileApp", "flyon")
-            .queryParam("_type", "json")
-            .queryParam("mapX", lon)
-            .queryParam("mapY", lat)
-            .queryParam("radius", radius)
-            .queryParam("pageNo", pageNo)
-            .queryParam("numOfRows", numOfRows)
-            .queryParam("arrange",
-                arrange) // (A=제목순,C=수정일순, D=생성일순, E=거리순) 대표이미지가 반드시 있는 정렬 (O=제목순, Q=수정일순, R=생성일순,S=거리순). 기본값은 S
-            .build(false)
-            .toUriString();
+        UriComponentsBuilder builder = UriComponentsBuilder
+                .fromHttpUrl(TOUR_BASE + "/locationBasedList2")
+                .queryParam("MobileOS", "WEB")
+                .queryParam("MobileApp", "flyon")
+                .queryParam("_type", "json")
+                .queryParam("mapX", lon)
+                .queryParam("mapY", lat)
+                .queryParam("radius", radius)
+                .queryParam("pageNo", pageNo)
+                .queryParam("numOfRows", numOfRows)
+                .queryParam("arrange",
+                        arrange); // (A=제목순,C=수정일순, D=생성일순, E=거리순) 대표이미지가 반드시 있는 정렬 (O=제목순, Q=대표이미지 수정일순, R=대표이미지 생성일순,S=대표이미지 거리순). 기본값은 S
+
+        if (contentTypeId != null) {
+            builder.queryParam("contentTypeId", contentTypeId);
+        }
+
+        String baseQs = builder
+                .build(false)
+                .toUriString();
 
         String fullUrl = baseQs + "&serviceKey=" + encodedKey;
 
@@ -105,10 +118,10 @@ public class TourismRepository {
         log.debug("[TourismAPI] Request URI (masked): {}", redactServiceKey(fullUrl));
 
         ResponseEntity<String> resp = tourismRestClient.get()
-            .uri(URI.create(fullUrl))
-            .accept(MediaType.APPLICATION_JSON)
-            .retrieve()
-            .toEntity(String.class);
+                .uri(URI.create(fullUrl))
+                .accept(MediaType.APPLICATION_JSON)
+                .retrieve()
+                .toEntity(String.class);
 
         String body = resp.getBody();
         if (body == null) {
@@ -128,7 +141,7 @@ public class TourismRepository {
             return mapperBuilder.build().readTree(body);
         } catch (Exception e) {
             log.error("[TourismAPI] JSON parse error. body(head 500)={}",
-                body.substring(0, Math.min(500, body.length())), e);
+                    body.substring(0, Math.min(500, body.length())), e);
             throw new RuntimeException("Failed to parse tourism API response", e);
         }
     }
