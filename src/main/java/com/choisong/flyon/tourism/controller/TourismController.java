@@ -19,8 +19,8 @@ public class TourismController {
     private final TourismService tourismService;
 
     @Operation(
-        summary = "위경도 기반 관광지 Slice 조회",
-        description = """
+            summary = "위경도 기반 관광지 Slice 조회",
+            description = """
             lat(위도), lon(경도), radius(미터), page(0-base), size 로 무한스크롤용 Slice 응답을 반환합니다.
             arrange(A=제목순, C=수정일순, D=생성일순, E=거리순,
                     O=대표이미지 제목순, Q=대표이미지 수정일순, R=대표이미지 생성일순, S=대표이미지 거리순)
@@ -29,13 +29,45 @@ public class TourismController {
     )
     @GetMapping("/nearby")
     public TourismSliceResult nearby(
-        @RequestParam double lat,
-        @RequestParam double lon,
-        @RequestParam(defaultValue = "20000") int radius,
-        @RequestParam(defaultValue = "0") int page,
-        @RequestParam(defaultValue = "10") int size,
-        @RequestParam(defaultValue = "S") String arrange
+            @RequestParam double lat,
+            @RequestParam double lon,
+            @RequestParam(defaultValue = "20000") int radius,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "S") String arrange
     ) {
         return tourismService.findNearbySlice(lat, lon, radius, page, size, arrange);
+    }
+
+    @Operation(
+            summary = "위경도 기반 관광지(12) 전용 Slice 조회",
+            description = "contentTypeId=12(관광지)로 고정하여 조회합니다."
+    )
+    @GetMapping("/attractions")
+    public TourismSliceResult attractions(
+            @RequestParam double lat,
+            @RequestParam double lon,
+            @RequestParam(defaultValue = "20000") int radius,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "S") String arrange
+    ) {
+        return tourismService.findNearbySlice(lat, lon, radius, page, size, arrange, 12);
+    }
+
+    @Operation(
+            summary = "위경도 기반 음식점(39) 전용 Slice 조회",
+            description = "contentTypeId=39(음식점)로 고정하여 조회합니다."
+    )
+    @GetMapping("/restaurants")
+    public TourismSliceResult restaurants(
+            @RequestParam double lat,
+            @RequestParam double lon,
+            @RequestParam(defaultValue = "20000") int radius,
+            @RequestParam(defaultValue = "0") int page,
+            @RequestParam(defaultValue = "10") int size,
+            @RequestParam(defaultValue = "S") String arrange
+    ) {
+        return tourismService.findNearbySlice(lat, lon, radius, page, size, arrange, 39);
     }
 }
