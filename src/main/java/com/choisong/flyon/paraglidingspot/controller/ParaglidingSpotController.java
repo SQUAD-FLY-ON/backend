@@ -32,13 +32,14 @@ public class ParaglidingSpotController {
     @GetMapping
     @Operation(summary = "체험장 탐색", description = "광역시와 도 단위의 문자열로 체험장을 검색합니다. 가능한 지역 (경기도,강원도,경상남도,경상북도,광주광역시,울산광역시,"
         + "대구광역시,대전광역시,부산광역시,제주특별자치도,충청남도,충청북도)")
-    public SearchedSpotResponse searchSpots(@RequestParam String sido) {
-        return paraglidingSpotService.searchSpots(sido);
+    public SearchedSpotResponse searchSpots(@RequestParam(required = false) String sido,
+        @RequestParam(required = false) String sigungu) {
+        return paraglidingSpotService.searchSpots(sido,sigungu);
     }
 
     @GetMapping("/{spotId}")
     @Operation(summary = "체험장 상세 조회", description = "체험장의 상세 정보를 반환합니다.(웹사이트, 전화번호 등)")
     public SpotResponse findSpot(@PathVariable Long spotId) {
-        return paraglidingSpotService.findById(spotId);
+        return paraglidingSpotService.findSpotResponseById(spotId);
     }
 }

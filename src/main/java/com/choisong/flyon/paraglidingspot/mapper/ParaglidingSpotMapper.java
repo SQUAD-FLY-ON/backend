@@ -33,5 +33,6 @@ public interface ParaglidingSpotMapper {
     SearchedSpotResponse.SearchedSpot toSearchedSpotResponse(ParaglidingSpot paraglidingSpot);
 
     @Mapping(target = "name", source = "facilityName")
+    @Mapping(target = "fullAddress", source = "address.fullAddress")
     SpotResponse toSpotResponse(ParaglidingSpot paraglidingSpot);
 }

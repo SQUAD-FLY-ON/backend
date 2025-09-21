@@ -33,17 +33,37 @@ public class ParaglidingSpotService {
         return new ParaglidingSpotRecommendResponse(list);
     }
 
-    public SpotResponse findById(final Long id) {
+    public SpotResponse findSpotResponseById(final Long id) {
         return paraglidingSpotRepository.findById(id)
             .map(paraglidingSpotMapper::toSpotResponse)
             .orElseThrow(SpotNotFoundException::notFound);
     }
 
-    public SearchedSpotResponse searchSpots(final String sido) {
-        List<SearchedSpot> searchedSpots = paraglidingSpotRepository.findByAddressSido(sido).stream()
-            .map(paraglidingSpotMapper::toSearchedSpotResponse).toList();
+    public ParaglidingSpot findById(final Long id) {
+        return paraglidingSpotRepository.findById(id)
+            .orElseThrow(SpotNotFoundException::notFound);
+    }
+
+    public SearchedSpotResponse searchSpots(final String sido, final String sigungu) {
+        List<ParaglidingSpot> spots;
+
+        if (sido != null && sigungu != null) {
+            spots = paraglidingSpotRepository.findByAddress(sido, sigungu);
+        } else if (sido != null) {
+            spots = paraglidingSpotRepository.findByAddressSido(sido);
+        } else if (sigungu != null) {
+            spots = paraglidingSpotRepository.findByAddressSiGunGu(sigungu);
+        } else {
+            spots = paraglidingSpotRepository.findAll();
+        }
+
+        List<SearchedSpot> searchedSpots = spots.stream()
+            .map(paraglidingSpotMapper::toSearchedSpotResponse)
+            .toList();
+
         return new SearchedSpotResponse(searchedSpots);
     }
+
 }
 
 

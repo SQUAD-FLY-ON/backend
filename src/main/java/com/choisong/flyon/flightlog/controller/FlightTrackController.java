@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/flight-logs/{id}/track")
+@RequestMapping("/api/flight-logs/{paraglidingSpotId}/track")
 @RequiredArgsConstructor
 @Tag(name = "FlightTrack", description = "비행 트랙(위도/경도/고도) API")
 public class FlightTrackController {
@@ -33,8 +33,8 @@ public class FlightTrackController {
 
     @Operation(summary = "트랙 조회(포인트만 반환)", description = "해당 비행 기록의 포인트 리스트만 반환합니다.")
     @GetMapping
-    public FlightTrackResponse get(@PathVariable String id,
+    public FlightTrackResponse get(@PathVariable String paraglidingSpotId,
         @AuthenticationMember Long memberId) {
-        return flightTrackService.get(id, memberId);
+        return flightTrackService.get(paraglidingSpotId, memberId);
     }
 }

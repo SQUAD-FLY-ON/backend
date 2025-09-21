@@ -19,7 +19,7 @@ import org.springframework.web.bind.annotation.RestController;
 
 @RestController
 @RequiredArgsConstructor
-@RequestMapping("/api/tourism-schedule")
+    @RequestMapping("/api/tourism-schedule")
 @Tag(name = "여행 일정")
 public class TourismScheduleController {
 

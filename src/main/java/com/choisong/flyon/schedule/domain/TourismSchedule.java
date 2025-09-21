@@ -23,14 +23,16 @@ public class TourismSchedule {
     private LocalDate scheduleStart;
     private LocalDate scheduleEnd;
     private List<List<TourismSpot>> dailyTourismSpots;
+    private String tourName;
 
     @Builder
     public TourismSchedule(final Long memberId, final LocalDate scheduleStart, final LocalDate scheduleEnd,
-        final List<List<TourismSpot>> dailyTourismSpots) {
+        final List<List<TourismSpot>> dailyTourismSpots, final String tourName) {
         this.memberId = memberId;
         this.scheduleStart = scheduleStart;
         this.scheduleEnd = scheduleEnd;
         this.dailyTourismSpots = dailyTourismSpots;
+        this.tourName = tourName;
     }
 
     @Getter

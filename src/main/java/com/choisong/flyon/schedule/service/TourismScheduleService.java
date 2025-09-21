@@ -1,9 +1,11 @@
 package com.choisong.flyon.schedule.service;
 
 import com.choisong.flyon.gpt.service.GptService;
+import com.choisong.flyon.paraglidingspot.domain.ParaglidingSpot;
 import com.choisong.flyon.paraglidingspot.dto.SpotResponse;
 import com.choisong.flyon.paraglidingspot.service.ParaglidingSpotService;
 import com.choisong.flyon.schedule.domain.TourismSchedule;
+import com.choisong.flyon.schedule.domain.TourismSchedule.TourismSpot;
 import com.choisong.flyon.schedule.dto.ScheduleCreateRequest;
 import com.choisong.flyon.schedule.dto.ScheduleListResponse;
 import com.choisong.flyon.schedule.dto.ScheduleRecommendRequest;
@@ -11,6 +13,7 @@ import com.choisong.flyon.schedule.dto.ScheduleRecommendResponse;
 import com.choisong.flyon.schedule.repository.TourismScheduleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import java.util.Collections;
+import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.model.ChatResponse;
 import org.springframework.stereotype.Service;
@@ -28,7 +31,7 @@ public class TourismScheduleService {
     private final ObjectMapper objectMapper;
 
     public ScheduleRecommendResponse createGptSchedule(@RequestBody ScheduleRecommendRequest request) {
-        SpotResponse paraglidingSpot = paraglidingSpotService.findById(request.paraglidingSpotId());
+        SpotResponse paraglidingSpot = paraglidingSpotService.findSpotResponseById(request.paraglidingSpotId());
         try {
             String paraglidingSpotJson = objectMapper.writeValueAsString(paraglidingSpot);
             String tourismSpotJson = objectMapper.writeValueAsString(request.tourismSpotList());
@@ -59,11 +62,18 @@ public class TourismScheduleService {
     }
 
     public void createSchedule(final ScheduleCreateRequest request, final Long memberId) {
+        TourismSpot tourismSpot = request.schedules().stream()
+            .flatMap(List::stream)
+            .filter(spot -> spot.getId() != null)
+            .findFirst()
+            .get();
+        ParaglidingSpot spot = paraglidingSpotService.findById(tourismSpot.getId());
         TourismSchedule tourismSchedule = TourismSchedule.builder()
             .memberId(memberId)
             .dailyTourismSpots(request.schedules())
             .scheduleStart(request.scheduleStart())
             .scheduleEnd(request.scheduleEnd())
+            .tourName(spot.getAddress().getSigungu())
             .build();
         tourismScheduleRepository.save(tourismSchedule);
     }

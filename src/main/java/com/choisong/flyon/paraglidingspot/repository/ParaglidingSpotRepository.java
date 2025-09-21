@@ -19,4 +19,7 @@ public interface ParaglidingSpotRepository extends JpaRepository<ParaglidingSpot
 
     @Query("select ps  from ParaglidingSpot ps where ps.address.sido = :sido")
     List<ParaglidingSpot> findByAddressSido(String sido);
+
+    @Query("select ps  from ParaglidingSpot ps where ps.address.sigungu = :sigungu")
+    List<ParaglidingSpot> findByAddressSiGunGu(String sigungu);
 }
