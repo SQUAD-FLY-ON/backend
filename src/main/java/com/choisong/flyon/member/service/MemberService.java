@@ -14,6 +14,9 @@ import com.choisong.flyon.member.mapper.MemberMapper;
 import com.choisong.flyon.member.repository.MemberRepository;
 import com.choisong.flyon.member.repository.RoleRepository;
 import com.choisong.flyon.oauth.provider.OauthMember;
+import java.util.ArrayList;
+import java.util.List;
+import java.util.Random;
 import lombok.RequiredArgsConstructor;
 import org.springframework.security.crypto.password.PasswordEncoder;
 import org.springframework.stereotype.Service;
@@ -29,7 +32,11 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-
+    private List<String> profileUrls =  List.of(
+        "https://github.com/user-attachments/assets/9d326d15-b2ee-4559-9394-05ce4b4b6089",
+        "https://github.com/user-attachments/assets/094a9931-b8f1-4317-963d-ba32367bfd95",
+        "https://github.com/user-attachments/assets/4b2f2021-6951-455b-9bc5-243e2578b969"
+    );
 
     @Transactional
     public Long updateOrSaveOauthMember(final OauthMember oauthMember) {
@@ -50,9 +57,15 @@ public class MemberService {
         validateLoginId(request.loginId());
         validateNickName(request.nickname());
         String encodePassword = encodePassword(request.password());
-        Member member = memberMapper.toEntity(request, encodePassword);
+        String randomProfileImg = getRandomProfileImg();
+        Member member = memberMapper.toEntity(request, encodePassword,randomProfileImg);
         memberRepository.save(member);
         roleRepository.save(new Roles(member.getId(), MemberRole.ROLE_MEMBER));
+    }
+
+    private String getRandomProfileImg() {
+        Random random = new Random();
+        return profileUrls.get(random.nextInt(profileUrls.size()));
     }
 
     public MemberInfoResponse findMemberInfo(final Long memberId) {
