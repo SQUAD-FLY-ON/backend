@@ -32,7 +32,7 @@ public class MemberService {
     private final PasswordEncoder passwordEncoder;
     private final RoleRepository roleRepository;
     private final RefreshTokenRepository refreshTokenRepository;
-    private List<String> profileUrls =  List.of(
+    private final List<String> profileUrls =  List.of(
         "https://github.com/user-attachments/assets/9d326d15-b2ee-4559-9394-05ce4b4b6089",
         "https://github.com/user-attachments/assets/094a9931-b8f1-4317-963d-ba32367bfd95",
         "https://github.com/user-attachments/assets/4b2f2021-6951-455b-9bc5-243e2578b969"
