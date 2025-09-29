@@ -16,9 +16,11 @@ import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
 import org.springframework.ai.chat.model.ChatResponse;
+import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
 import org.springframework.web.bind.annotation.RequestBody;
+import org.springframework.web.server.ResponseStatusException;
 
 @RequiredArgsConstructor
 @Service
@@ -81,4 +83,14 @@ public class TourismScheduleService {
     public ScheduleListResponse getSchedule(final Long memberId) {
         return new ScheduleListResponse(tourismScheduleRepository.findSchedulesByMemberId(memberId));
     }
+
+    public TourismSchedule getScheduleById(final String id, final Long memberId) {
+        TourismSchedule schedule = tourismScheduleRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."));
+        if (!schedule.getMemberId().equals(memberId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+        }
+        return schedule;
+    }
+
 }
