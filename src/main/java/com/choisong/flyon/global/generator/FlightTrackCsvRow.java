@@ -9,6 +9,9 @@ public class FlightTrackCsvRow {
     @CsvBindByName(column = "id")
     private String id;
 
+    @CsvBindByName(column = "paraglidingSpotId")
+    private Long paraglidingSpotId;
+
     @CsvBindByName(column = "flightLogId")
     private String flightLogId;
 

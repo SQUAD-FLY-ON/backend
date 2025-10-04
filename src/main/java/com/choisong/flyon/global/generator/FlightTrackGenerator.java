@@ -29,14 +29,13 @@ public class FlightTrackGenerator implements CommandLineRunner {
         public double latitude;
         public double longitude;
         public double altitude;
-        public String time; // ISO-8601
+        public String time;
     }
 
     @Override
     public void run(String... args) throws Exception {
         if (flightTrackRepository.count() > 0) {
-            log.info("[FlightTrackGenerator] flight_tracks already present. Skipping preload.");
-            return;
+            flightTrackRepository.deleteAll();
         }
 
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("data/flight_tracks.csv");
@@ -73,7 +72,8 @@ public class FlightTrackGenerator implements CommandLineRunner {
                 LocalDateTime updatedAt = LocalDateTime.parse(r.getUpdatedAt());
 
                 FlightTrack entity = FlightTrack.builder()
-                    .id(null) // CSV의 id 무시하고 MongoDB가 생성
+                    .id(null)
+                    .paraglidingSpotId(r.getParaglidingSpotId())
                     .flightLogId((r.getFlightLogId() == null || r.getFlightLogId().isBlank())
                         ? null : r.getFlightLogId())
                     .memberId(r.getMemberId() == null ? 1L : r.getMemberId())

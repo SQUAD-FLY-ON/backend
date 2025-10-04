@@ -58,6 +58,16 @@ public class FlightTrackService {
         return new FlightTrackResponse(dtos);
     }
 
+    public FlightTrackResponse getByParaglidingSpotId(Long paraglidingSpotId) {
+        var track = flightTrackRepository.findByParaglidingSpotId(paraglidingSpotId)
+            .orElseGet(() -> FlightTrack.builder().points(List.of()).build());
+        var dtos = track.getPoints() == null ? List.<TrackPointDto>of()
+            : track.getPoints().stream()
+                .map(p -> new TrackPointDto(p.getLatitude(), p.getLongitude(), p.getAltitude(), p.getTime()))
+                .toList();
+        return new FlightTrackResponse(dtos);
+    }
+
     public List<TrackPointDto> getPoints(String flightLogId, Long memberId) {
         mustOwnLog(flightLogId, memberId);
         var track = flightTrackRepository.findByFlightLogIdAndMemberId(flightLogId, memberId)

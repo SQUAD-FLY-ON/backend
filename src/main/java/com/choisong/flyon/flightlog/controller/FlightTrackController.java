@@ -33,8 +33,7 @@ public class FlightTrackController {
 
     @Operation(summary = "트랙 조회(포인트만 반환)", description = "해당 비행 기록의 포인트 리스트만 반환합니다.")
     @GetMapping
-    public FlightTrackResponse get(@PathVariable String paraglidingSpotId,
-        @AuthenticationMember Long memberId) {
-        return flightTrackService.get(paraglidingSpotId, memberId);
+    public FlightTrackResponse get(@PathVariable Long paraglidingSpotId) {
+        return flightTrackService.getByParaglidingSpotId(paraglidingSpotId);
     }
 }
