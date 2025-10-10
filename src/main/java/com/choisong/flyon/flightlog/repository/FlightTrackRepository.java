@@ -7,4 +7,6 @@ import org.springframework.data.mongodb.repository.MongoRepository;
 public interface FlightTrackRepository extends MongoRepository<FlightTrack, String> {
 
     Optional<FlightTrack> findByFlightLogIdAndMemberId(String flightLogId, Long memberId);
+
+    Optional<FlightTrack> findByParaglidingSpotId(Long paraglidingSpotId);
 }

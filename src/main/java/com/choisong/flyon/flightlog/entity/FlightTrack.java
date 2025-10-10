@@ -19,6 +19,8 @@ public class FlightTrack {
     @Id
     private String id;
 
+    private Long paraglidingSpotId;
+
     private String flightLogId;
 
     private Long memberId;

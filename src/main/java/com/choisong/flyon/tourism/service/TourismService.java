@@ -68,7 +68,7 @@ public class TourismService {
                 for (JsonNode n : arrNode) {
                     items.add(TourismResponse.builder()
                             .name(get(n, "title"))
-                            .tourismType(TourismType.ATTRACTION_SPOT)
+                            .tourismType(contentTypeId==12 ? TourismType.ATTRACTION_SPOT : TourismType.RESTAURANT_SPOT)
                             .fullAddress(get(n, "addr1"))
                             .longitude(get(n, "mapx"))
                             .latitude(get(n, "mapy"))
