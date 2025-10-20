@@ -1,12 +1,15 @@
 package com.choisong.flyon.member.service;
 
 
+import com.choisong.flyon.global.exception.ErrorCode;
+import com.choisong.flyon.global.exception.ValidationException;
 import com.choisong.flyon.jwt.repository.RefreshTokenRepository;
 import com.choisong.flyon.member.domain.Member;
 import com.choisong.flyon.member.domain.MemberRole;
 import com.choisong.flyon.member.domain.Roles;
 import com.choisong.flyon.member.dto.MemberInfoResponse;
 import com.choisong.flyon.member.dto.MemberRegisterRequest;
+import com.choisong.flyon.member.dto.MemberUpdateRequest;
 import com.choisong.flyon.member.exception.LoginIdDuplicatedException;
 import com.choisong.flyon.member.exception.MemberNotFoundException;
 import com.choisong.flyon.member.exception.NicknameDuplicatedException;
@@ -71,6 +74,13 @@ public class MemberService {
     public MemberInfoResponse findMemberInfo(final Long memberId) {
         Member member = getMemberById(memberId);
         return memberMapper.toMemberInfoResponse(member);
+    }
+
+    public void updateMember(final Long memberId, final MemberUpdateRequest request) {
+        final Member member = getMemberById(memberId);
+        String encodePassword = encodePassword(request.password());
+        validateLoginId(request.loginId());
+        member.update(request.loginId(), encodePassword, request.nickname());
     }
 
     private String encodePassword(final String password) {
