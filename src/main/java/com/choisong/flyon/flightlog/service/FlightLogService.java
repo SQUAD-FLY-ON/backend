@@ -2,7 +2,6 @@ package com.choisong.flyon.flightlog.service;
 
 import com.choisong.flyon.flightlog.dto.FlightLogRequest;
 import com.choisong.flyon.flightlog.dto.FlightLogResponse;
-import com.choisong.flyon.flightlog.dto.FlightTrackUpsertRequest;
 import com.choisong.flyon.flightlog.exception.FlightLogAccessDeniedException;
 import com.choisong.flyon.flightlog.exception.FlightLogNotFoundException;
 import com.choisong.flyon.flightlog.mapper.FlightLogMapper;
@@ -46,15 +45,15 @@ public class FlightLogService {
     public Slice<FlightLogResponse> getMyFlightLogs(Long memberId, int page, int size) {
         Pageable pageable = PageRequest.of(page, size);
         return flightLogRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable)
-            .map(flightLog -> {
-                var trackPoints = flightTrackService.getPoints(flightLog.getId(), memberId);
-                return flightLogMapper.toResponse(flightLog);
-            });
+                .map(flightLog -> {
+                    var trackPoints = flightTrackService.getPoints(flightLog.getId(), memberId);
+                    return flightLogMapper.toResponse(flightLog);
+                });
     }
 
     public void delete(String id, Long memberId) {
         var flightLog = flightLogRepository.findById(id)
-            .orElseThrow(FlightLogNotFoundException::notFound);
+                .orElseThrow(FlightLogNotFoundException::notFound);
         if (!flightLog.getMemberId().equals(memberId)) {
             throw FlightLogAccessDeniedException.accessDenied();
         }

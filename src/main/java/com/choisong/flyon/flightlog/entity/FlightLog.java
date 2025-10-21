@@ -22,6 +22,8 @@ public class FlightLog {
 
     private String airfieldName;
 
+    private String airfieldImageUrl;
+
     private double flightTime;
 
     private double flightDistance;
