@@ -51,6 +51,12 @@ public class Member {
         this.imgUrl = imgUrl;
     }
 
+    public void update(String loginId, final String encodedPassword,String nickname) {
+        this.loginId = loginId;
+        this.encodedPassword = encodedPassword;
+        this.nickname = nickname;
+    }
+
     public void increaseJumpAltitude(final Integer altitude) {
         totalJumpAltitude += altitude;
         this.gliderBadge = GliderBadge.fromAltitude(totalJumpAltitude);

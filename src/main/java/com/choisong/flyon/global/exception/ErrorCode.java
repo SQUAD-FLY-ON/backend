@@ -22,6 +22,7 @@ public enum ErrorCode {
     ACCESSTOKEN_HEADER_NOT_FOUND(HttpStatus.UNAUTHORIZED, "008", "요청 헤더에서 액세스토큰을 찾을 수 없습니다."),
     PASSWORD_NOT_MATCHED(HttpStatus.BAD_REQUEST, "009", "비밀번호가 일치하지 않습니다."),
     REFRESHTOKEN_EXPIRED(HttpStatus.UNAUTHORIZED,"010","리프레쉬토큰이 만료됐습니다"),
+    INVALID_INPUT_VALUE(HttpStatus.BAD_REQUEST,"011","입력값 오류"),
 
     /**
      * Member Error 100~199
