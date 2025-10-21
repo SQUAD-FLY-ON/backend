@@ -39,10 +39,10 @@ public class TourismScheduleService {
             String tourismSpotJson = objectMapper.writeValueAsString(request.tourismSpotList());
 
             ChatResponse schedule = gptService.createSchedule(
-                paraglidingSpotJson,
-                tourismSpotJson,
-                request.scheduleStart().toString(),
-                request.scheduleEnd().toString()
+                    paraglidingSpotJson,
+                    tourismSpotJson,
+                    request.scheduleStart().toString(),
+                    request.scheduleEnd().toString()
             );
 
             String jsonText = schedule.getResult().getOutput().getText();
@@ -59,24 +59,24 @@ public class TourismScheduleService {
         try {
             return objectMapper.readValue(json, ScheduleRecommendResponse.class);
         } catch (Exception e) {
-            throw new RuntimeException("스케줄 JSON 파싱 실패", e);
+            throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "스케줄 JSON 파싱 실패", e);
         }
     }
 
     public void createSchedule(final ScheduleCreateRequest request, final Long memberId) {
         TourismSpot tourismSpot = request.schedules().stream()
-            .flatMap(List::stream)
-            .filter(spot -> spot.getId() != null)
-            .findFirst()
-            .get();
+                .flatMap(List::stream)
+                .filter(spot -> spot.getId() != null)
+                .findFirst()
+                .get();
         ParaglidingSpot spot = paraglidingSpotService.findById(tourismSpot.getId());
         TourismSchedule tourismSchedule = TourismSchedule.builder()
-            .memberId(memberId)
-            .dailyTourismSpots(request.schedules())
-            .scheduleStart(request.scheduleStart())
-            .scheduleEnd(request.scheduleEnd())
-            .tourName(spot.getAddress().getSigungu())
-            .build();
+                .memberId(memberId)
+                .dailyTourismSpots(request.schedules())
+                .scheduleStart(request.scheduleStart())
+                .scheduleEnd(request.scheduleEnd())
+                .tourName(spot.getAddress().getSigungu())
+                .build();
         tourismScheduleRepository.save(tourismSchedule);
     }
 
@@ -93,4 +93,12 @@ public class TourismScheduleService {
         return schedule;
     }
 
+    public void deleteSchedule(final String id, final Long memberId) {
+        TourismSchedule schedule = tourismScheduleRepository.findById(id)
+                .orElseThrow(() -> new ResponseStatusException(HttpStatus.NOT_FOUND, "일정을 찾을 수 없습니다."));
+        if (!schedule.getMemberId().equals(memberId)) {
+            throw new ResponseStatusException(HttpStatus.FORBIDDEN, "접근 권한이 없습니다.");
+        }
+        tourismScheduleRepository.deleteById(id);
+    }
 }

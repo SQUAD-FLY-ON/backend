@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.*;
 
 @RestController
 @RequiredArgsConstructor
-    @RequestMapping("/api/tourism-schedule")
+@RequestMapping("/api/tourism-schedule")
 @Tag(name = "여행 일정")
 public class TourismScheduleController {
 
@@ -44,5 +44,12 @@ public class TourismScheduleController {
     @Operation(summary = "여행 계획 단건 조회", description = "일정 ID 로 단건을 조회합니다.")
     public TourismSchedule getTourismScheduleById(@PathVariable String id, @AuthenticationMember Long memberId) {
         return tourismScheduleService.getScheduleById(id, memberId);
+    }
+
+    @DeleteMapping("/{id}")
+    @ResponseStatus(HttpStatus.NO_CONTENT)
+    @Operation(summary = "여행 계획 삭제", description = "본인 소유의 여행 일정을 삭제합니다.")
+    public void deleteTourismSchedule(@PathVariable String id, @AuthenticationMember Long memberId) {
+        tourismScheduleService.deleteSchedule(id, memberId);
     }
 }
