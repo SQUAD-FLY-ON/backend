@@ -11,7 +11,6 @@ public record FlightLogResponse(
     double flightDistance,
     double averageSpeed,
     int flightAltitude,
-    String videoUrl,
     LocalDateTime createdAt,
     List<TrackPointDto> track
 ) {

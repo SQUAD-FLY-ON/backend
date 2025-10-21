@@ -32,7 +32,5 @@ public class FlightLog {
 
     private int flightAltitude;
 
-    private String videoUrl;
-
     private LocalDateTime createdAt;
 }
