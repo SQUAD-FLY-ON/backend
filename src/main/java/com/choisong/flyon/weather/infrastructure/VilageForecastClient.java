@@ -7,14 +7,14 @@ import org.springframework.web.service.annotation.GetExchange;
 import org.springframework.web.service.annotation.HttpExchange;
 
 @HttpExchange(
-    url = "http://apis.data.go.kr/1360000/VilageFcstInfoService_2.0",
+    url = "https://apihub.kma.go.kr/api/typ02/openApi/VilageFcstInfoService_2.0",
     accept = MediaType.APPLICATION_JSON_VALUE
 )
 public interface VilageForecastClient {
 
     @GetExchange("/getVilageFcst")
     VilageForecastResponse getVilageForecast(
-        @RequestParam("serviceKey") String serviceKey,
+        @RequestParam("authKey") String serviceKey,
         @RequestParam("numOfRows") int numOfRows,
         @RequestParam("pageNo") int pageNo,
         @RequestParam("dataType") String dataType,
