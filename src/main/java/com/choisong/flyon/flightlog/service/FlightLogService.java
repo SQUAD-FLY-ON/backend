@@ -46,8 +46,20 @@ public class FlightLogService {
         Pageable pageable = PageRequest.of(page, size);
         return flightLogRepository.findByMemberIdOrderByCreatedAtDesc(memberId, pageable)
                 .map(flightLog -> {
-                    var trackPoints = flightTrackService.getPoints(flightLog.getId(), memberId);
-                    return flightLogMapper.toResponse(flightLog);
+                    var points = flightTrackService.getPoints(flightLog.getId(), memberId);
+                    var dto = flightLogMapper.toResponse(flightLog);
+                    // record 불변이라 새로 생성해 track 세팅
+                    return new FlightLogResponse(
+                            dto.id(),
+                            dto.airfieldName(),
+                            dto.airfieldImageUrl(),
+                            dto.flightTime(),
+                            dto.flightDistance(),
+                            dto.averageSpeed(),
+                            dto.flightAltitude(),
+                            dto.createdAt(),
+                            points
+                    );
                 });
     }
 
