@@ -22,6 +22,7 @@ public interface ParaglidingSpotMapper {
 
     @Mapping(target = "spotName", source = "facilityName")
     @Mapping(target = "imgUrl", source = "imgUrl")
+    @Mapping(target = "fullAddress", source = "address.fullAddress")
     RecommendSpot toRecommendSpotResponse(ParaglidingSpot paraglidingSpot);
 
     @Mapping(target = "id", expression = "java(String.valueOf(paraglidingSpot.getId()))")
