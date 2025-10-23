@@ -15,7 +15,7 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 @RestController
-@RequestMapping("/api/flight-logs/{flightLogId}/track")
+@RequestMapping("/api/flight-logs")
 @RequiredArgsConstructor
 @Tag(name = "FlightTrack", description = "비행 트랙(위도/경도/고도) API")
 public class FlightTrackController {
@@ -23,7 +23,7 @@ public class FlightTrackController {
     private final FlightTrackService flightTrackService;
 
     @Operation(summary = "트랙 저장/갱신", description = "위도/경도/고도 리스트를 저장하거나 덮어씁니다.")
-    @PutMapping
+    @PutMapping("/{flightLogId}/track")
     public FlightTrackResponse upsert(@PathVariable("flightLogId") String flightLogId,
                                       @AuthenticationMember Long memberId,
                                       @RequestBody FlightTrackUpsertRequest req) {
@@ -32,9 +32,8 @@ public class FlightTrackController {
     }
 
     @Operation(summary = "트랙 조회(포인트만 반환)", description = "해당 비행 기록의 포인트 리스트만 반환합니다.")
-    @GetMapping
-    public FlightTrackResponse get(@PathVariable("flightLogId") String flightLogId,
-                                   @AuthenticationMember Long memberId) {
-        return flightTrackService.get(flightLogId, memberId);
+    @GetMapping("/{paraglidingSpotId}/track")
+    public FlightTrackResponse get(@PathVariable Long paraglidingSpotId) {
+        return flightTrackService.getByParaglidingSpotId(paraglidingSpotId);
     }
 }

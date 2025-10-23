@@ -76,10 +76,13 @@ public class MemberService {
         return memberMapper.toMemberInfoResponse(member);
     }
 
+    @Transactional
     public void updateMember(final Long memberId, final MemberUpdateRequest request) {
         final Member member = getMemberById(memberId);
         String encodePassword = encodePassword(request.password());
-        validateLoginId(request.loginId());
+        if(!member.getLoginId().equals(request.loginId())) {
+            validateLoginId(request.loginId());
+        }
         member.update(request.loginId(), encodePassword, request.nickname());
     }
 
