@@ -35,6 +35,17 @@ public class TourismSchedule {
         this.tourName = tourName;
     }
 
+    @Override
+    public String toString() {
+        return "TourismSchedule{" +
+            "id=" + id +
+            ", name='" + tourName + '\'' +
+            ", scheduleStart=" + scheduleStart +
+            ", scheduleEnd=" + scheduleEnd +
+            '}';
+    }
+
+
     @Getter
     @NoArgsConstructor
     @AllArgsConstructor

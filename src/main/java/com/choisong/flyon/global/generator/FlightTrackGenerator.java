@@ -1,7 +1,10 @@
 package com.choisong.flyon.global.generator;
 
+import com.choisong.flyon.flightlog.entity.FlightLog;
 import com.choisong.flyon.flightlog.entity.FlightTrack;
+import com.choisong.flyon.flightlog.repository.FlightLogRepository;
 import com.choisong.flyon.flightlog.repository.FlightTrackRepository;
+import com.choisong.flyon.paraglidingspot.mapper.ParaglidingSpotMapper;
 import com.fasterxml.jackson.core.type.TypeReference;
 import com.fasterxml.jackson.databind.ObjectMapper;
 import com.fasterxml.jackson.databind.SerializationFeature;
@@ -24,7 +27,7 @@ import org.springframework.stereotype.Component;
 public class FlightTrackGenerator implements CommandLineRunner {
 
     private final FlightTrackRepository flightTrackRepository;
-
+    private final FlightLogRepository flightLogRepository;
     private static class PointRaw {
         public double latitude;
         public double longitude;
@@ -36,6 +39,10 @@ public class FlightTrackGenerator implements CommandLineRunner {
     public void run(String... args) throws Exception {
         if (flightTrackRepository.count() > 0) {
             flightTrackRepository.deleteAll();
+        }
+
+        if(flightLogRepository.count() > 0) {
+            flightLogRepository.deleteAll();
         }
 
         try (InputStream is = getClass().getClassLoader().getResourceAsStream("data/flight_tracks.csv");

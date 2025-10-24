@@ -12,6 +12,8 @@ import com.choisong.flyon.schedule.dto.ScheduleRecommendRequest;
 import com.choisong.flyon.schedule.dto.ScheduleRecommendResponse;
 import com.choisong.flyon.schedule.repository.TourismScheduleRepository;
 import com.fasterxml.jackson.databind.ObjectMapper;
+import java.time.LocalDate;
+import java.util.ArrayList;
 import java.util.Collections;
 import java.util.List;
 import lombok.RequiredArgsConstructor;
@@ -81,8 +83,18 @@ public class TourismScheduleService {
     }
 
     public ScheduleListResponse getSchedule(final Long memberId) {
-        return new ScheduleListResponse(tourismScheduleRepository.findSchedulesByMemberId(memberId));
+        LocalDate today = LocalDate.now();
+
+        List<TourismSchedule> activeOrUpcoming = tourismScheduleRepository.findActiveOrUpcomingSchedules(memberId, today);
+        List<TourismSchedule> past = tourismScheduleRepository.findPastSchedules(memberId, today);
+
+        List<TourismSchedule> sorted = new ArrayList<>();
+        sorted.addAll(activeOrUpcoming);
+        sorted.addAll(past);
+
+        return new ScheduleListResponse(sorted);
     }
+
 
     public TourismSchedule getScheduleById(final String id, final Long memberId) {
         TourismSchedule schedule = tourismScheduleRepository.findById(id)
